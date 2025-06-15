@@ -1,0 +1,10 @@
+:root {
+  --color-bg-primary: #FDD946;       /* your pale yellow */
+  --color-bg-secondary: #FFF9E2;     /* accent yellow */
+  --color-text-primary: #1A1918;     /* dark text */
+  --color-text-secondary: #0D38D3;   /* GWC Blue 3 */
+  --color-border: #E2E8F0;
+  --color-btn-bg: #0D38D3;
+  --color-btn-text: #FDD946;
+  --color-accent: #43D6B9;           /* minty extra option */
+}
