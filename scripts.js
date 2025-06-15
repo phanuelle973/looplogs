@@ -3,16 +3,16 @@ const posts = [
     title: "Welcome to LoopLogs",
     author: "Phanuelle",
     date: "June 15, 2025",
-    link: "posts/welcome.md",
-    tags: ["Reflections"]
+    link: "post.html?file=posts/welcome.md",
+    tags: ["Reflections"],
   },
   {
     title: "My First Hackathon",
     author: "Jamie R.",
     date: "June 16, 2025",
     link: "posts/hackathon.md",
-    tags: ["Projects", "Coding Journey"]
-  }
+    tags: ["Projects", "Coding Journey"],
+  },
 ];
 
 const postList = document.getElementById("post-list");
