@@ -5,6 +5,10 @@
   --color-text-secondary: #0D38D3;   /* GWC Blue 3 */
   --color-border: #E2E8F0;
   --color-btn-bg: #0D38D3;
-  --color-btn-text: #FDD946;
+  --color-btn-text: #1A1918;
   --color-accent: #43D6B9;           /* minty extra option */
+}
+
+a:hover {
+    color: var(--color-btn-bg);
 }

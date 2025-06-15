@@ -1,59 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LoopLogs Post</title>
-  <link rel="stylesheet" href="style.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LoopLogs Post</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
+
 <body>
-  <header>
-    <h1>LoopLogs</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="posts.html">All Posts</a>
-    </nav>
-  </header>
+    <header>
+        <h1>LoopLogs</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="posts.html">All Posts</a>
+        </nav>
+    </header>
 
-  <main>
-    <div id="post-container">Loading post...</div>
-    <section id="comments">
-        <script src="https://giscus.app/client.js"
-        data-repo="phanuelle973/looplogs"
-        data-repo-id="R_kgDOO71oLA"
-        data-category="General"
-        data-category-id="DIC_kwDOO71oLM4CrihB"
-        data-mapping="url"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="/giscus-theme.css"
-        data-lang="en"
-        crossorigin="anonymous"
-        async>
-</script>
-    </section>
-  </main>
+    <main>
+        <div id="post-container">Loading post...</div>
+        <section id="comments">
+            <script src="https://giscus.app/client.js" data-repo="phanuelle973/looplogs" data-repo-id="R_kgDOO71oLA"
+                data-category="General" data-category-id="DIC_kwDOO71oLM4CrihB" data-mapping="url" data-strict="0"
+                data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top"
+                data-theme="https://phanuelle973.github.io/looplogs/giscus-theme.css" data-lang="en"
+                crossorigin="anonymous" async>
+                </script>
+        </section>
+    </main>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const file = params.get("file");
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const file = params.get("file");
 
-    if (file) {
-      fetch(file)
-        .then(res => res.text())
-        .then(md => {
-          const html = marked.parse(md);
-          document.getElementById("post-container").innerHTML = html;
-        })
-        .catch(err => {
-          document.getElementById("post-container").innerText = "Failed to load post.";
-        });
-    } else {
-      document.getElementById("post-container").innerText = "No post specified.";
-    }
-  </script>
+        if (file) {
+            fetch(file)
+                .then(res => res.text())
+                .then(md => {
+                    const html = marked.parse(md);
+                    document.getElementById("post-container").innerHTML = html;
+                })
+                .catch(err => {
+                    document.getElementById("post-container").innerText = "Failed to load post.";
+                });
+        } else {
+            document.getElementById("post-container").innerText = "No post specified.";
+        }
+    </script>
 </body>
+
 </html>
