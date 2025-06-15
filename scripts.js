@@ -10,7 +10,7 @@ const posts = [
     title: "My First Hackathon",
     author: "Jamie R.",
     date: "June 16, 2025",
-    link: "posts/hackathon.md",
+    link: "post.html?file=posts/hackathon.md",
     tags: ["Projects", "Coding Journey"],
   },
 ];
