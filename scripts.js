@@ -21,7 +21,8 @@ posts.forEach(post => {
   const el = document.createElement("article");
   el.innerHTML = `
     <h3><a href="${post.link}">${post.title}</a></h3>
-    <p><strong>By:</strong> ${post.author} · <strong>Date:</strong> ${post.date}</p>
+    <p><strong>By:</strong> <a href="author.html?name=${encodeURIComponent(post.author)}">${post.author}</a></p>
+ · <strong>Date:</strong> ${post.date}</p>
     <p><strong>Tags:</strong> ${post.tags.join(", ")}</p>
   `;
   postList.appendChild(el);
