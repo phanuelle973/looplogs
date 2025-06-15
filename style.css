@@ -1,0 +1,25 @@
+body {
+  font-family: 'Helvetica Neue', sans-serif;
+  background: #f9f6ff;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: #d0a4f6;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+nav a {
+  margin: 0 1rem;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+main {
+  padding: 2rem;
+}
