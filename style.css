@@ -1,8 +1,10 @@
 /* GWC COLORS */
 /* #FA7815
+#FFF9E2
 #FDD946
 #0D38D3
 #003046
+#D7F9F4
 #0D9C90
 #43D6B9
 #1A1918
@@ -10,18 +12,18 @@
 /* GWC FONTS */
 
 
-@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Quicksand:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
 
 :root {
-  --bg: #fff7fc;
-  --accent: #c084fc;
-  --accent-dark: #9333ea;
-  --text: #333;
-  --light: #fce7f3;
+  --bg: #FFF9E2;
+  --accent: #FDD946;
+  --accent-dark: #0D38D3;
+  --text: #1A1918;
+  --light: #003046;
 }
 
 body {
-  font-family: 'Quicksand', sans-serif;
+  font-family: 'Roboto Mono';
   background: var(--bg);
   color: var(--text);
   margin: 0;
@@ -37,7 +39,7 @@ header {
 }
 
 header h1 {
-  font-family: 'Patrick Hand', cursive;
+  font-family: 'Roboto Mono';
   font-size: 3rem;
   margin: 0;
 }
@@ -59,7 +61,7 @@ nav a {
 }
 
 nav a:hover {
-  background: #6b21a8;
+  background: #003046;
 }
 
 main {
@@ -79,7 +81,7 @@ article {
 
 article h3 {
   margin-top: 0;
-  font-family: 'Patrick Hand', cursive;
+  font-family: 'Roboto Mono';
 }
 
 article a {
