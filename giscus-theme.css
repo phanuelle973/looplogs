@@ -10,5 +10,5 @@
 }
 
 a:hover {
-    color: var(--color-btn-bg);
+    background: var(--color-btn-bg);
 }
