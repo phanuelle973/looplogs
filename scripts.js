@@ -33,7 +33,7 @@ window.db = db; // so it’s usable globally if needed
 
 const authors = {
   Phanuelle: {
-    pic: "assets/Phanuelle_Manuel.jpg",
+    pic: "assets/authors/Phanuelle_Manuel.jpg",
     bio: "Founder of LoopLogs, lover of clean code and coffee ☕",
   },
   "Jamie R.": {
@@ -121,4 +121,50 @@ async function createLikeButton(postId) {
   };
 
   return btn;
+}
+
+
+// After loading the post content
+const postAuthorId = post.author; // e.g., "phanuelle"
+
+fetch("authors.json")
+  .then((res) => res.json())
+  .then((authors) => {
+    const author = authors[postAuthorId];
+    if (!author) return;
+
+    const box = document.getElementById("author-box");
+    box.innerHTML = `
+      <div class="author-profile">
+        <img src="${author.image}" alt="${author.name}" class="author-img">
+        <div>
+          <h3>${author.name}</h3>
+          <p>${author.bio}</p>
+          ${author.link ? `<a href="${author.link}" target="_blank">More</a>` : ""}
+        </div>
+      </div>
+    `;
+  });
+
+
+  const authorParams = new URLSearchParams(window.location.search);
+const authorId = authorParams.get("id");
+
+if (authorId) {
+  fetch("authors.json")
+    .then((res) => res.json())
+    .then((data) => {
+      const author = data[authorId];
+      if (!author) return;
+
+      const section = document.getElementById("author-profile-page");
+      section.innerHTML = `
+        <div class="author-full-profile">
+          <img src="${author.image}" class="author-img-large" />
+          <h1>${author.name}</h1>
+          <p>${author.bio}</p>
+          ${author.link ? `<a href="${author.link}" target="_blank">Visit Profile</a>` : ""}
+        </div>
+      `;
+    });
 }

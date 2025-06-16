@@ -150,6 +150,25 @@ button.gwc-btn:hover {
   border: 3px solid var(--accent-dark);
 }
 
+.author-box, .author-full-profile {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  align-items: center;
+}
+
+.author-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+.author-img-large {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+
 
 
 

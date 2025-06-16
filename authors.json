@@ -1,0 +1,13 @@
+{
+  "phanuelle": {
+    "name": "Phanuelle M.",
+    "bio": "CS major at Alabama, LoopLogs founder 💻🌸",
+    "image": "assets/authors/Phanuelle_Manuel.jpg",
+    "link": "https://github.com/phanuelle973"
+  },
+  "jamie": {
+    "name": "Jamie L.",
+    "bio": "Aspiring game dev who loves GWC + cats 🐱",
+    "image": "assets/authors/jamie.png"
+  }
+}
