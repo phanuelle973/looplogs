@@ -52,7 +52,7 @@ posts.forEach((post) => {
   el.appendChild(meta);
   el.appendChild(tags);
 
-  // ❤️ Like button
+  // Add the like button asynchronously
   createLikeButton(post.link).then((likeBtn) => {
     el.appendChild(likeBtn);
     postList.appendChild(el);
