@@ -33,44 +33,63 @@ const posts = [
 const postList = document.getElementById("post-list");
 
 posts.forEach((post) => {
-  const el = document.createElement("article");
-
-  el.innerHTML = `
-    <h3><a href="${post.link}">${post.title}</a></h3>
-    <p><strong>By:</strong> <a href="author.html?name=${encodeURIComponent(
-      post.author
-    )}">${post.author}</a> · <strong>Date:</strong> ${post.date}</p>
-    <p><strong>Tags:</strong> ${post.tags.join(", ")}</p>
-  `;
-
-  // ❤️ Like button logic
-  // ❤️ Like logic
-  const likeKey = `${post.link}-likes`;
-  const isLiked = localStorage.getItem(`${post.link}`) === "liked";
-  let likeCount = parseInt(localStorage.getItem(likeKey)) || 0;
-
-  const likeBtn = document.createElement("button");
-  likeBtn.textContent = isLiked
-    ? `❤️ Liked (${likeCount})`
-    : `🤍 Like (${likeCount})`;
-  likeBtn.className = "like-button";
-
-  likeBtn.onclick = () => {
-    const currentlyLiked = localStorage.getItem(`${post.link}`) === "liked";
-    if (currentlyLiked) {
-      localStorage.removeItem(`${post.link}`);
-      likeCount = Math.max(0, likeCount - 1);
-      localStorage.setItem(likeKey, likeCount);
-      likeBtn.textContent = `🤍 Like (${likeCount})`;
-    } else {
-      localStorage.setItem(`${post.link}`, "liked");
-      likeCount += 1;
-      localStorage.setItem(likeKey, likeCount);
-      likeBtn.textContent = `❤️ Liked (${likeCount})`;
-    }
-  };
-
+createLikeButton(post.link).then(likeBtn => {
   el.appendChild(likeBtn);
   postList.appendChild(el);
 });
 
+  // ❤️ Like button logic
+import { doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+async function createLikeButton(postId) {
+  const db = window.db;
+  const docRef = doc(db, "likes", postId);
+  const docSnap = await getDoc(docRef);
+
+  let count = 0;
+  if (docSnap.exists()) {
+    count = docSnap.data().count || 0;
+  } else {
+    await setDoc(docRef, { count: 0 });
+  }
+
+  const btn = document.createElement("button");
+  btn.className = "like-button";
+  btn.textContent = `❤️ Like (${count})`;
+
+  btn.onclick = async () => {
+    await updateDoc(docRef, {
+      count: increment(1)
+    });
+
+    const newSnap = await getDoc(docRef);
+    const newCount = newSnap.data().count;
+    btn.textContent = `❤️ Like (${newCount})`;
+  };
+
+  return btn;
+}
+
+
+
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDKaDLUXIFkorwaM9k_RvSiIip5z3rp8Zo",
+    authDomain: "looplogs-4a711.firebaseapp.com",
+    projectId: "looplogs-4a711",
+    storageBucket: "looplogs-4a711.firebasestorage.app",
+    messagingSenderId: "122145076851",
+    appId: "1:122145076851:web:afc68cf5c11c2c8ee95c06",
+    measurementId: "G-WXD0LKBL8N"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);

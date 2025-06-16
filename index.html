@@ -26,6 +26,30 @@
             <p>Get started sharing your journey as a coder, creator, and community member!</p>
         </article>
     </main>
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import the functions you need from the SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        // Your Firebase config (replace with your real values)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDKaDLUXIFkorwaM9k_RvSiIip5z3rp8Zo",
+            authDomain: "looplogs-4a711.firebaseapp.com",
+            projectId: "looplogs-4a711",
+            storageBucket: "looplogs-4a711.appspot.com",
+            messagingSenderId: "122145076851",
+            appId: "122145076851:web:afc68cf5c11c2c8ee95c06"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Make it available globally
+        window.db = db;
+    </script>
+
     <script src="scripts.js"></script>
 </body>
 
