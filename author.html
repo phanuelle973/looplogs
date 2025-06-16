@@ -1,50 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>LoopLogs - Author</title>
-  <link rel="stylesheet" href="style.css"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LoopLogs - Author</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-  <header>
-    <h1>LoopLogs</h1>
-    <p id="author-header">Posts by ...</p>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="posts.html">All Posts</a>
-    </nav>
-  </header>
+    <header>
+        <h1>LoopLogs</h1>
+        <p id="author-header">Posts by ...</p>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="posts.html">All Posts</a>
+        </nav>
+    </header>
 
-  <main>
-    <section id="author-posts">
-      <!-- Author-specific posts will be injected here -->
-    </section>
-  </main>
+    <main>
+        <section id="author-posts">
+            <!-- Author-specific posts will be injected here -->
+        </section>
+    </main>
 
-  <script src="scripts.js"></script>
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const authorName = params.get("name");
+    <script src="scripts.js"></script>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const authorName = params.get("name");
 
-    document.getElementById("author-header").textContent = `Posts by ${authorName}`;
+        document.getElementById("author-header").textContent = `Posts by ${authorName}`;
 
-    const filteredPosts = posts.filter(post => post.author === authorName);
-    const container = document.getElementById("author-posts");
+        const filteredPosts = posts.filter(post => post.author === authorName);
+        const container = document.getElementById("author-posts");
 
-    if (filteredPosts.length === 0) {
-      container.innerHTML = "<p>No posts found for this author.</p>";
-    } else {
-      filteredPosts.forEach(post => {
-        const el = document.createElement("article");
-        el.innerHTML = `
+        if (filteredPosts.length === 0) {
+            container.innerHTML = "<p>No posts found for this author.</p>";
+        } else {
+            filteredPosts.forEach(post => {
+                const el = document.createElement("article");
+                el.innerHTML = `
           <h3><a href="${post.link}">${post.title}</a></h3>
           <p><strong>Date:</strong> ${post.date}</p>
           <p><strong>Tags:</strong> ${post.tags.join(", ")}</p>
         `;
-        container.appendChild(el);
-      });
-    }
-  </script>
+                container.appendChild(el);
+            });
+        }
+
+        const author = authors[authorName];
+        if (author) {
+            document.getElementById("author-header").innerHTML = `
+    <img src="${author.pic}" alt="${authorName}" class="author-pic">
+    <h2>${authorName}</h2>
+    <p>${author.bio}</p>
+  `;
+        }
+
+    </script>
 </body>
+
 </html>

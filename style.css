@@ -118,6 +118,32 @@ button.gwc-btn:hover {
   background: #003046; /* deeper blue */
 }
 
+.like-button {
+  margin-top: 0.5rem;
+  background: transparent;
+  color: var(--accent-dark);
+  font-size: 1rem;
+  border: 2px dashed var(--accent-dark);
+  padding: 0.4rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.like-button:hover {
+  background: var(--accent-dark);
+  color: white;
+}
+
+/* END BUTTON */
+
+.author-pic {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
 
 
 
