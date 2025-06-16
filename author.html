@@ -57,6 +57,19 @@
   `;
         }
 
+
+        const authorHeader = document.getElementById("author-header");
+
+        if (author) {
+            authorHeader.innerHTML = `
+    <img src="${author.pic}" alt="${authorName}" class="author-pic" />
+    <h2>${authorName}</h2>
+    <p>${author.bio}</p>
+  `;
+        } else {
+            authorHeader.textContent = `Posts by ${authorName}`;
+        }
+
     </script>
 </body>
 
