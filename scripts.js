@@ -107,16 +107,30 @@ async function createLikeButton(postId) {
 
   const btn = document.createElement("button");
   btn.className = "like-button";
-  btn.textContent = `❤️ Like (${count})`;
+
+  const likedKey = `liked-${safeId}`;
+  const alreadyLiked = localStorage.getItem(likedKey);
+
+  if (alreadyLiked) {
+    btn.textContent = `❤️ Liked (${count})`;
+    btn.classList.add("liked");
+  } else {
+    btn.textContent = `❤️ Like (${count})`;
+  }
 
   btn.onclick = async () => {
+    if (localStorage.getItem(likedKey)) return;
+
     await updateDoc(docRef, {
       count: increment(1),
     });
 
+    localStorage.setItem(likedKey, "true");
+
     const newSnap = await getDoc(docRef);
     const newCount = newSnap.data().count;
-    btn.textContent = `❤️ Like (${newCount})`;
+    btn.textContent = `❤️ Liked (${newCount})`;
+    btn.classList.add("liked");
   };
 
   return btn;
