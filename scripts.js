@@ -173,3 +173,28 @@ if (authorId) {
       `;
     });
 }
+
+if (window.location.pathname.includes("author.html")) {
+  const authorParams = new URLSearchParams(window.location.search);
+  const authorId = authorParams.get("id");
+
+  fetch("authors.json")
+    .then((res) => res.json())
+    .then((data) => {
+      const author = data[authorId];
+      if (!author) {
+        document.getElementById("author-profile-page").innerHTML =
+          "<p>Author not found.</p>";
+        return;
+      }
+
+      document.getElementById("author-profile-page").innerHTML = `
+        <div class="author-full-profile">
+          <img src="${author.image}" class="author-img-large" />
+          <h1>${author.name}</h1>
+          <p>${author.bio}</p>
+          ${author.link ? `<a href="${author.link}" target="_blank">More</a>` : ""}
+        </div>
+      `;
+    });
+}
