@@ -154,9 +154,9 @@ fetch("authors.json")
     const box = document.getElementById("author-box");
     box.innerHTML = `
       <div class="author-profile">
-        <img src="${author.image}" alt="${author.name}" class="author-img">
+        <img src="${author.image}" alt="${author.id}" class="author-img">
         <div>
-          <h3>${author.name}</h3>
+          <h3>${author.id}</h3>
           <p>${author.bio}</p>
           ${
             author.link
