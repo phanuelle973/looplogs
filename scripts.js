@@ -60,36 +60,36 @@ posts.forEach((post) => {
 });
 
   // ❤️ Like button logic
-import { doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+// import { doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-async function createLikeButton(postId) {
-  const db = window.db;
-  const docRef = doc(db, "likes", postId);
-  const docSnap = await getDoc(docRef);
+// async function createLikeButton(postId) {
+//   const db = window.db;
+//   const docRef = doc(db, "likes", postId);
+//   const docSnap = await getDoc(docRef);
 
-  let count = 0;
-  if (docSnap.exists()) {
-    count = docSnap.data().count || 0;
-  } else {
-    await setDoc(docRef, { count: 0 });
-  }
+//   let count = 0;
+//   if (docSnap.exists()) {
+//     count = docSnap.data().count || 0;
+//   } else {
+//     await setDoc(docRef, { count: 0 });
+//   }
 
-  const btn = document.createElement("button");
-  btn.className = "like-button";
-  btn.textContent = `❤️ Like (${count})`;
+//   const btn = document.createElement("button");
+//   btn.className = "like-button";
+//   btn.textContent = `❤️ Like (${count})`;
 
-  btn.onclick = async () => {
-    await updateDoc(docRef, {
-      count: increment(1)
-    });
+//   btn.onclick = async () => {
+//     await updateDoc(docRef, {
+//       count: increment(1)
+//     });
 
-    const newSnap = await getDoc(docRef);
-    const newCount = newSnap.data().count;
-    btn.textContent = `❤️ Like (${newCount})`;
-  };
+//     const newSnap = await getDoc(docRef);
+//     const newCount = newSnap.data().count;
+//     btn.textContent = `❤️ Like (${newCount})`;
+//   };
 
-  return btn;
-}
+//   return btn;
+// }
 
 
 
