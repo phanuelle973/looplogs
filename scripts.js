@@ -88,6 +88,8 @@ posts.forEach((post) => {
     el.appendChild(likeBtn);
     postList.appendChild(el);
   });
+  postList.appendChild(el);
+
 });
 
 // ❤️ Like button logic
@@ -132,6 +134,7 @@ async function createLikeButton(postId) {
     btn.textContent = `❤️ Liked (${newCount})`;
     btn.classList.add("liked");
   };
+  console.log("Already liked?", localStorage.getItem(likedKey));
 
   return btn;
 }
@@ -207,7 +210,11 @@ if (window.location.pathname.includes("author.html")) {
           <img src="${author.image}" class="author-img-large" />
           <h1>${author.name}</h1>
           <p>${author.bio}</p>
-          ${author.link ? `<a href="${author.link}" target="_blank">More</a>` : ""}
+          ${
+            author.link
+              ? `<a href="${author.link}" target="_blank">More</a>`
+              : ""
+          }
         </div>
       `;
     });
