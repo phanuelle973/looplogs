@@ -117,3 +117,44 @@ button.gwc-btn {
 button.gwc-btn:hover {
   background: #003046; /* deeper blue */
 }
+
+
+
+
+
+
+
+/* ---------- Mobile Tweaks ---------- */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px;
+    padding: 0 1rem;
+  }
+
+  header h1 {
+    font-size: 2rem;
+  }
+
+  nav a {
+    display: block;
+    margin: 0.5rem auto;
+    width: max-content;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  article {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  #post-container {
+    word-wrap: break-word;
+  }
+
+  #comments {
+    padding: 1rem 0;
+  }
+}
