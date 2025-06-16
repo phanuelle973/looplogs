@@ -30,8 +30,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 window.db = db; // so it’s usable globally if needed
-window.posts = posts;
-
 
 const authors = {
   Phanuelle: {
@@ -65,6 +63,8 @@ const posts = [
   },
 ];
 
+window.posts = posts;
+
 const postList = document.getElementById("post-list");
 
 posts.forEach((post) => {
@@ -93,7 +93,6 @@ posts.forEach((post) => {
     postList.appendChild(el);
   });
   postList.appendChild(el);
-
 });
 
 // ❤️ Like button logic
@@ -169,35 +168,9 @@ fetch("authors.json")
     `;
   });
 
-// const authorParams = new URLSearchParams(window.location.search);
-// const authorId = authorParams.get("id");
-
-// if (authorId) {
-//   fetch("authors.json")
-//     .then((res) => res.json())
-//     .then((data) => {
-//       const author = data[authorId];
-//       if (!author) return;
-
-//       const section = document.getElementById("author-profile-page");
-//       section.innerHTML = `
-//         <div class="author-full-profile">
-//           <img src="${author.image}" class="author-img-large" />
-//           <h1>${author.name}</h1>
-//           <p>${author.bio}</p>
-//           ${
-//             author.link
-//               ? `<a href="${author.link}" target="_blank">Visit Profile</a>`
-//               : ""
-//           }
-//         </div>
-//       `;
-//     });
-// }
-
 if (window.location.pathname.includes("author.html")) {
   const authorParams = new URLSearchParams(window.location.search);
-  const authorId = authorParams.get("id");
+  const authorId = new URLSearchParams(window.location.search).get("id");
 
   fetch("authors.json")
     .then((res) => res.json())
