@@ -5,10 +5,10 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebas
 import {
   getFirestore,
   doc,
-//   getDoc,
-//   setDoc,
-//   updateDoc,
-//   increment,
+  getDoc,
+  setDoc,
+  updateDoc,
+  increment,
 } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -43,6 +43,8 @@ const authors = {
 };
 
 // END FIREBASE SETUP
+
+// Post data used for rendering author.html and posts.html
 
 const posts = [
   {
