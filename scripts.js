@@ -102,7 +102,7 @@ posts.forEach((post) => {
   // Your web app's Firebase configuration
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   const firebaseConfig = {
-    apiKey: "AIzaSyDKaDLUXIFkorwaM9k_RvSiIip5z3rp8Zo",
+    apiKey: "AIzaSyBDt3Ybm9mjDn5u85MFhVqB0UYDBiQvrJg",
     authDomain: "looplogs-4a711.firebaseapp.com",
     projectId: "looplogs-4a711",
     storageBucket: "looplogs-4a711.firebasestorage.app",
