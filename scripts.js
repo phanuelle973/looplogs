@@ -148,31 +148,31 @@ fetch("authors.json")
     `;
   });
 
-const authorParams = new URLSearchParams(window.location.search);
-const authorId = authorParams.get("id");
+// const authorParams = new URLSearchParams(window.location.search);
+// const authorId = authorParams.get("id");
 
-if (authorId) {
-  fetch("authors.json")
-    .then((res) => res.json())
-    .then((data) => {
-      const author = data[authorId];
-      if (!author) return;
+// if (authorId) {
+//   fetch("authors.json")
+//     .then((res) => res.json())
+//     .then((data) => {
+//       const author = data[authorId];
+//       if (!author) return;
 
-      const section = document.getElementById("author-profile-page");
-      section.innerHTML = `
-        <div class="author-full-profile">
-          <img src="${author.image}" class="author-img-large" />
-          <h1>${author.name}</h1>
-          <p>${author.bio}</p>
-          ${
-            author.link
-              ? `<a href="${author.link}" target="_blank">Visit Profile</a>`
-              : ""
-          }
-        </div>
-      `;
-    });
-}
+//       const section = document.getElementById("author-profile-page");
+//       section.innerHTML = `
+//         <div class="author-full-profile">
+//           <img src="${author.image}" class="author-img-large" />
+//           <h1>${author.name}</h1>
+//           <p>${author.bio}</p>
+//           ${
+//             author.link
+//               ? `<a href="${author.link}" target="_blank">Visit Profile</a>`
+//               : ""
+//           }
+//         </div>
+//       `;
+//     });
+// }
 
 if (window.location.pathname.includes("author.html")) {
   const authorParams = new URLSearchParams(window.location.search);
