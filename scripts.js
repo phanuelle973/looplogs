@@ -42,7 +42,6 @@ const authors = {
   },
 };
 
-
 // END FIREBASE SETUP
 
 const posts = [
@@ -123,9 +122,8 @@ async function createLikeButton(postId) {
   return btn;
 }
 
-
 // After loading the post content
-const postAuthorId = post.author; // e.g., "phanuelle"
+const postAuthorId = posts.author; // e.g., "phanuelle"
 
 fetch("authors.json")
   .then((res) => res.json())
@@ -140,14 +138,17 @@ fetch("authors.json")
         <div>
           <h3>${author.name}</h3>
           <p>${author.bio}</p>
-          ${author.link ? `<a href="${author.link}" target="_blank">More</a>` : ""}
+          ${
+            author.link
+              ? `<a href="${author.link}" target="_blank">More</a>`
+              : ""
+          }
         </div>
       </div>
     `;
   });
 
-
-  const authorParams = new URLSearchParams(window.location.search);
+const authorParams = new URLSearchParams(window.location.search);
 const authorId = authorParams.get("id");
 
 if (authorId) {
@@ -163,7 +164,11 @@ if (authorId) {
           <img src="${author.image}" class="author-img-large" />
           <h1>${author.name}</h1>
           <p>${author.bio}</p>
-          ${author.link ? `<a href="${author.link}" target="_blank">Visit Profile</a>` : ""}
+          ${
+            author.link
+              ? `<a href="${author.link}" target="_blank">Visit Profile</a>`
+              : ""
+          }
         </div>
       `;
     });
