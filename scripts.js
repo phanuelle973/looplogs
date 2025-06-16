@@ -9,10 +9,6 @@ const authors = {
   },
 };
 
-
-
-
-
 const posts = [
   {
     title: "Welcome to LoopLogs",
@@ -59,8 +55,14 @@ posts.forEach((post) => {
   });
 });
 
-  // ❤️ Like button logic
-// import { doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+// ❤️ Like button logic
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  increment,
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 async function createLikeButton(postId) {
   const db = window.db;
@@ -80,7 +82,7 @@ async function createLikeButton(postId) {
 
   btn.onclick = async () => {
     await updateDoc(docRef, {
-      count: increment(1)
+      count: increment(1),
     });
 
     const newSnap = await getDoc(docRef);
@@ -91,26 +93,24 @@ async function createLikeButton(postId) {
   return btn;
 }
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBDt3Ybm9mjDn5u85MFhVqB0UYDBiQvrJg",
+  authDomain: "looplogs-4a711.firebaseapp.com",
+  projectId: "looplogs-4a711",
+  storageBucket: "looplogs-4a711.firebasestorage.app",
+  messagingSenderId: "122145076851",
+  appId: "1:122145076851:web:afc68cf5c11c2c8ee95c06",
+  measurementId: "G-WXD0LKBL8N",
+};
 
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyBDt3Ybm9mjDn5u85MFhVqB0UYDBiQvrJg",
-    authDomain: "looplogs-4a711.firebaseapp.com",
-    projectId: "looplogs-4a711",
-    storageBucket: "looplogs-4a711.firebasestorage.app",
-    messagingSenderId: "122145076851",
-    appId: "1:122145076851:web:afc68cf5c11c2c8ee95c06",
-    measurementId: "G-WXD0LKBL8N"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
