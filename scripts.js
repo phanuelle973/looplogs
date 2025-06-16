@@ -30,6 +30,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 window.db = db; // so it’s usable globally if needed
+window.posts = posts;
+
 
 const authors = {
   Phanuelle: {
@@ -142,7 +144,7 @@ async function createLikeButton(postId) {
 }
 
 // After loading the post content
-const postAuthorId = posts.author; // e.g., "phanuelle"
+const postAuthorId = new URLSearchParams(window.location.search).get("id");
 
 fetch("authors.json")
   .then((res) => res.json())
