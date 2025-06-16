@@ -35,7 +35,6 @@ const authors = {
   },
 };
 
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 const db = getFirestore(app);
 window.db = db; // Make it global so createLikeButton can access it
 
