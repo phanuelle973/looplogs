@@ -33,9 +33,10 @@ const posts = [
 const postList = document.getElementById("post-list");
 
 posts.forEach((post) => {
-createLikeButton(post.link).then(likeBtn => {
-  el.appendChild(likeBtn);
-  postList.appendChild(el);
+    createLikeButton(post.link).then(likeBtn => {
+    el.appendChild(likeBtn);
+    postList.appendChild(el);
+    });
 });
 
   // ❤️ Like button logic
