@@ -2,7 +2,6 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
 import {
   getFirestore,
   doc,
@@ -29,7 +28,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const db = getFirestore(app);
+window.db = db; // so it’s usable globally if needed
 
 const authors = {
   Phanuelle: {
@@ -42,8 +42,6 @@ const authors = {
   },
 };
 
-const db = getFirestore(app);
-window.db = db; // Make it global so createLikeButton can access it
 
 // END FIREBASE SETUP
 
