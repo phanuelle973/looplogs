@@ -33,7 +33,7 @@
 
         document.getElementById("author-header").textContent = `Posts by ${authorName}`;
 
-        const filteredPosts = posts.filter(post => post.author === authorName);
+        const filteredPosts = post.filter(post => post.author === authorName);
         const container = document.getElementById("author-posts");
 
         if (filteredPosts.length === 0) {
