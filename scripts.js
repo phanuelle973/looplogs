@@ -28,7 +28,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// const db = getFirestore(app);
 window.db = db; // so it’s usable globally if needed
 
 const authors = {
