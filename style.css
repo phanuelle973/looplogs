@@ -92,3 +92,28 @@ article a {
 article a:hover {
   text-decoration: underline;
 }
+
+#comments {
+  border-top: 3px dashed var(--accent-dark);
+  padding-top: 2rem;
+  margin-top: 3rem;
+  background: var(--bg);
+}
+
+
+/* BUTTON */
+
+button.gwc-btn {
+  background: var(--accent-dark);
+  color: var(--btn-text);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s ease;
+}
+
+button.gwc-btn:hover {
+  background: #003046; /* deeper blue */
+}
