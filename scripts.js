@@ -1,6 +1,6 @@
 const authors = {
   Phanuelle: {
-    pic: "assets/Phanuelle_Manuel.png",
+    pic: "assets/Phanuelle_Manuel.jpg",
     bio: "Founder of LoopLogs, lover of clean code and coffee ☕",
   },
   "Jamie R.": {
