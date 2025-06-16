@@ -1,12 +1,12 @@
 {
   "phanuelle": {
-    "name": "phanuelle",
+    "id": "phanuelle",
     "bio": "Founder of LoopLogs and Girls Who Code leader!",
     "image": "/assets/authors/Phanuelle_Manuel.jpg",
     "link": "https://github.com/phanuelle973"
   },
   "jamie": {
-    "name": "Jamie L.",
+    "id": "Jamie L.",
     "bio": "Aspiring game dev who loves GWC + cats 🐱",
     "image": "assets/authors/jamie.png"
   }
