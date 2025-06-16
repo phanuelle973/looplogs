@@ -33,10 +33,30 @@ const posts = [
 const postList = document.getElementById("post-list");
 
 posts.forEach((post) => {
-    createLikeButton(post.link).then(likeBtn => {
+  const el = document.createElement("div");
+  el.className = "post-preview";
+
+  const title = document.createElement("h2");
+  const link = document.createElement("a");
+  link.href = post.link;
+  link.textContent = post.title;
+  title.appendChild(link);
+
+  const meta = document.createElement("p");
+  meta.textContent = `By ${post.author} · ${post.date}`;
+
+  const tags = document.createElement("p");
+  tags.textContent = post.tags.join(", ");
+
+  el.appendChild(title);
+  el.appendChild(meta);
+  el.appendChild(tags);
+
+  // ❤️ Like button
+  createLikeButton(post.link).then((likeBtn) => {
     el.appendChild(likeBtn);
     postList.appendChild(el);
-    });
+  });
 });
 
   // ❤️ Like button logic
