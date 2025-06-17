@@ -2,9 +2,8 @@
 
 // Import the functions you need from the SDKs you need
 // (Make sure these are imported at the top of your HTML or as ES modules if using bundlers)
-// import { initializeApp } from "firebase/app";
-// import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "firebase/firestore";
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBDt3Ybm9mjDn5u85MFhVqB0UYDBiQvrJg",
