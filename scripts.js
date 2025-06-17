@@ -3,7 +3,14 @@
 // Import the functions you need from the SDKs you need
 // (Make sure these are imported at the top of your HTML or as ES modules if using bundlers)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  increment,
+} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBDt3Ybm9mjDn5u85MFhVqB0UYDBiQvrJg",
@@ -144,19 +151,22 @@ async function createLikeButton(postId) {
 
   btn.onclick = async () => {
     const alreadyLiked = localStorage.getItem(`liked_${safeId}`) === "true";
-    const change = alreadyLiked ? -1 : 1;
 
     try {
-      await updateDoc(likeRef, {
-        count: increment(change),
-      });
+      if (alreadyLiked) {
+        await updateDoc(likeRef, { count: increment(-1) });
+        localStorage.removeItem(`liked_${safeId}`);
+      } else {
+        await updateDoc(likeRef, { count: increment(1) });
+        localStorage.setItem(`liked_${safeId}`, "true");
+      }
+
       const newSnap = await getDoc(likeRef);
       const newCount = newSnap.data().count;
 
       btn.textContent = alreadyLiked
         ? `❤️ Like (${newCount})`
         : `💔 Unlike (${newCount})`;
-      localStorage.setItem(`liked_${safeId}`, !alreadyLiked);
     } catch (e) {
       console.error("Error updating like:", e);
     }
@@ -217,10 +227,10 @@ async function loadPostsFromFirestore() {
   if (!postList) return;
 
   const snapshot = await db.collection("posts").get();
-  firebasePosts = snapshot.docs.map(doc => ({
+  firebasePosts = snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
-    timestamp: doc.data().timestamp?.toDate?.() || new Date()  // fallback
+    timestamp: doc.data().timestamp?.toDate?.() || new Date(), // fallback
   }));
 
   displayPosts(firebasePosts); // show initially
@@ -230,7 +240,7 @@ function displayPosts(posts) {
   const postList = document.getElementById("post-list");
   postList.innerHTML = "";
 
-  posts.forEach(data => {
+  posts.forEach((data) => {
     const post = document.createElement("div");
     post.className = "post-card";
     post.innerHTML = `
@@ -247,19 +257,19 @@ function displayPosts(posts) {
 document.addEventListener("DOMContentLoaded", loadPostsFromFirestore);
 
 async function loadAuthorData(username) {
-  const res = await fetch('authors.json');
+  const res = await fetch("authors.json");
   const authors = await res.json();
   return authors[username];
 }
 
 function getAuthorFromUrl() {
   const params = new URLSearchParams(window.location.search);
-  return params.get('id');
+  return params.get("id");
 }
 
 function filterPostsByAuthor(username) {
   return window.posts.filter(
-    post => post.author.toLowerCase().replace(/\s/g, '') === username
+    (post) => post.author.toLowerCase().replace(/\s/g, "") === username
   );
 }
 
@@ -272,30 +282,38 @@ async function renderAuthorPage() {
   if (!author) return;
 
   // Update author header
-  const authorHeader = document.getElementById('author-header');
+  const authorHeader = document.getElementById("author-header");
   if (authorHeader) {
-    authorHeader.textContent = `Posts by ${author.name || author.id || username}`;
+    authorHeader.textContent = `Posts by ${
+      author.name || author.id || username
+    }`;
   }
 
   // Show author profile
-  const profileBox = document.getElementById('author-profile-page');
+  const profileBox = document.getElementById("author-profile-page");
   if (profileBox) {
     profileBox.innerHTML = `
-      <img src="${author.image}" alt="${author.name || author.username}" style="max-width:120px;border-radius:50%;">
+      <img src="${author.image}" alt="${
+      author.name || author.username
+    }" style="max-width:120px;border-radius:50%;">
       <h2>@${author.username}</h2>
-      <p>${author.bio || ''}</p>
-      ${author.link ? `<a href="${author.link}" target="_blank">Profile</a>` : ''}
+      <p>${author.bio || ""}</p>
+      ${
+        author.link
+          ? `<a href="${author.link}" target="_blank">Profile</a>`
+          : ""
+      }
     `;
   }
 
   // Filter and render posts by this author
   const filteredPosts = window.posts.filter(
-    post => post.author.toLowerCase().replace(/\s/g, '') === username
+    (post) => post.author.toLowerCase().replace(/\s/g, "") === username
   );
   renderPostList(filteredPosts);
 }
 
-if (window.location.pathname.includes('author.html')) {
+if (window.location.pathname.includes("author.html")) {
   main().then(renderAuthorPage);
 } else {
   main();
