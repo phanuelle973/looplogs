@@ -57,7 +57,7 @@ window.posts = posts;
 const postList = document.getElementById("post-list");
 
 if (postList) {
-    posts.forEach((post) => {
+  posts.forEach((post) => {
     const el = document.createElement("div");
     el.className = "post-preview";
 
@@ -69,7 +69,7 @@ if (postList) {
 
     const meta = document.createElement("p");
     meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
-        post.author.toLowerCase()
+      post.author.toLowerCase()
     )}" class="author-link">${post.author}</a> · ${post.date}`;
 
     const tags = document.createElement("p");
@@ -81,47 +81,51 @@ if (postList) {
 
     // Add the like button asynchronously
     createLikeButton(post.link).then((likeBtn) => {
-        el.appendChild(likeBtn);
-        postList.appendChild(el);
+      el.appendChild(likeBtn);
+      postList.appendChild(el);
     });
     postList.appendChild(el);
-    });
+  });
 }
 
 // ❤️ Like button logic
 
 function createLikeButton(postId, container) {
   const db = getFirestore(app);
-  const likeRef = doc(db, 'likes', postId);
-  const userLikedKey = `liked_${postId}`;
-  const hasLiked = localStorage.getItem(userLikedKey) === 'true';
+  const safeId = btoa(postId); // base64-encode
+  const likeRef = doc(db, "likes", safeId);
+  const userLikedKey = `liked_${safeId}`;
+  const hasLiked = localStorage.getItem(userLikedKey) === "true";
 
-  const button = document.createElement('button');
-  const countSpan = document.createElement('span');
-  button.className = 'like-button';
+  const button = document.createElement("button");
+  const countSpan = document.createElement("span");
+  button.className = "like-button";
 
   async function updateLikeDisplay() {
     const snap = await getDoc(likeRef);
     const count = snap.exists() ? snap.data().count || 0 : 0;
     countSpan.textContent = `❤️ ${count}`;
-    button.classList.toggle('liked', localStorage.getItem(userLikedKey) === 'true');
+    button.classList.toggle(
+      "liked",
+      localStorage.getItem(userLikedKey) === "true"
+    );
   }
 
   button.appendChild(countSpan);
   updateLikeDisplay();
 
-  button.addEventListener('click', async () => {
+  button.addEventListener("click", async () => {
     const snap = await getDoc(likeRef);
     let count = snap.exists() ? snap.data().count || 0 : 0;
 
-    if (localStorage.getItem(userLikedKey) === 'true') {
+    if (localStorage.getItem(userLikedKey) === "true") {
       // Unlike
       await setDoc(likeRef, { count: Math.max(0, count - 1) });
       localStorage.removeItem(userLikedKey);
     } else {
       // Like
       await setDoc(likeRef, { count: count + 1 });
-      localStorage.setItem(userLikedKey, 'true');
+      localStorage.setItem(userLikedKey, "true");
     }
 
     updateLikeDisplay();
@@ -137,13 +141,13 @@ if (window.location.pathname.includes("author.html")) {
   fetch("authors.json")
     .then((res) => res.json())
     .then((authors) => {
-        const author = authors[postAuthorId];
-        if (!author) {
-          console.error("Author not found:", postAuthorId);
-          return;
-        }
-        const box = document.getElementById("author-box");
-        box.innerHTML = `
+      const author = authors[postAuthorId];
+      if (!author) {
+        console.error("Author not found:", postAuthorId);
+        return;
+      }
+      const box = document.getElementById("author-box");
+      box.innerHTML = `
         <div class="author-profile">
           <img src="${author.image}" alt="${author.id}" class="author-img">
           <div>
