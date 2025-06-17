@@ -269,7 +269,7 @@ async function renderAuthorPage() {
   if (profileBox) {
     profileBox.innerHTML = `
       <img src="${author.image}" alt="${author.name || author.username}" style="max-width:120px;border-radius:50%;">
-      <h2>${author.username}</h2>
+      <h2>@${author.username}</h2>
       <p>${author.bio || ''}</p>
       ${author.link ? `<a href="${author.link}" target="_blank">Profile</a>` : ''}
     `;
