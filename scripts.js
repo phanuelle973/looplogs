@@ -33,23 +33,12 @@ window.db = db; // so it’s usable globally if needed
 
 // END FIREBASE SETUP
 
-// const authors = {
-//   phanuelle: {
-//     pic: "assets/authors/Phanuelle_Manuel.jpg",
-//     bio: "Founder of LoopLogs, lover of clean code and coffee ☕",
-//   },
-//   "Jamie": {
-//     pic: "assets/jamie.png",
-//     bio: "CS major, hackathon addict, big fan of VS Code themes.",
-//   },
-// };
-
 // Post data used for rendering author.html and posts.html
 
 const posts = [
   {
     title: "Welcome to LoopLogs",
-    author: "phanuelle",
+    author: "Phanuelle",
     date: "June 15, 2025",
     link: "post.html?file=posts/welcome.md",
     tags: ["Reflections"],
