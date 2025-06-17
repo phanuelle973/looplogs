@@ -63,11 +63,13 @@ if (sortSelect) {
     const sortBy = sortSelect.value;
     let sortedPosts = [...posts];
 
-    if (sortBy === "newest") {
+    if (sortBy === "date") {
       sortedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
-    } else if (sortBy === "oldest") {
-      sortedPosts.sort((a, b) => new Date(a.date) - new Date(b.date));
-    } else if (sortBy === "a-z") {
+    } else if (sortBy === "likes") {
+      sortedPosts.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+    } else if (sortBy === "author") {
+      sortedPosts.sort((a, b) => a.author.localeCompare(b.author));
+    } else if (sortBy === "title") {
       sortedPosts.sort((a, b) => a.title.localeCompare(b.title));
     }
 
@@ -191,30 +193,11 @@ if (window.location.pathname.includes("author.html")) {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const sortDropdown = document.getElementById("sort-options");
-  if (sortDropdown) {
-    sortDropdown.addEventListener("change", () => {
-      const selectedOption = sortDropdown.value;
-      let sortedPosts = [...allPosts]; // allPosts must be defined globally
-
-      if (selectedOption === "likes") {
-        sortedPosts.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-      } else if (selectedOption === "recent") {
-        sortedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
-      } else if (selectedOption === "title") {
-        sortedPosts.sort((a, b) => a.title.localeCompare(b.title));
-      }
-
-      displayPosts(sortedPosts); // update display
-    });
-  }
-});
-
 document.getElementById("tag-search").addEventListener("input", (e) => {
   const query = e.target.value.toLowerCase();
-  const filteredPosts = allPosts.filter(post =>
-    post.tags && post.tags.some(tag => tag.toLowerCase().includes(query))
+  const filteredPosts = posts.filter(
+    (post) =>
+      post.tags && post.tags.some((tag) => tag.toLowerCase().includes(query))
   );
-  displayPosts(filteredPosts);
+  renderPostList(filteredPosts); // Use the function that works
 });
