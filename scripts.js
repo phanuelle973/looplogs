@@ -190,3 +190,31 @@ if (window.location.pathname.includes("author.html")) {
       console.error("Failed to load authors.json:", error);
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const sortDropdown = document.getElementById("sort-options");
+  if (sortDropdown) {
+    sortDropdown.addEventListener("change", () => {
+      const selectedOption = sortDropdown.value;
+      let sortedPosts = [...allPosts]; // allPosts must be defined globally
+
+      if (selectedOption === "likes") {
+        sortedPosts.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+      } else if (selectedOption === "recent") {
+        sortedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+      } else if (selectedOption === "title") {
+        sortedPosts.sort((a, b) => a.title.localeCompare(b.title));
+      }
+
+      displayPosts(sortedPosts); // update display
+    });
+  }
+});
+
+document.getElementById("tag-search").addEventListener("input", (e) => {
+  const query = e.target.value.toLowerCase();
+  const filteredPosts = allPosts.filter(post =>
+    post.tags && post.tags.some(tag => tag.toLowerCase().includes(query))
+  );
+  displayPosts(filteredPosts);
+});
