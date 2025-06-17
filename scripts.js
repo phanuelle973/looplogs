@@ -56,35 +56,37 @@ window.posts = posts;
 
 const postList = document.getElementById("post-list");
 
-posts.forEach((post) => {
-  const el = document.createElement("div");
-  el.className = "post-preview";
+if (postList) {
+    posts.forEach((post) => {
+    const el = document.createElement("div");
+    el.className = "post-preview";
 
-  const title = document.createElement("h2");
-  const link = document.createElement("a");
-  link.href = post.link;
-  link.textContent = post.title;
-  title.appendChild(link);
+    const title = document.createElement("h2");
+    const link = document.createElement("a");
+    link.href = post.link;
+    link.textContent = post.title;
+    title.appendChild(link);
 
-  const meta = document.createElement("p");
-  meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
-    post.author.toLowerCase()
-  )}" class="author-link">${post.author}</a> · ${post.date}`;
+    const meta = document.createElement("p");
+    meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
+        post.author.toLowerCase()
+    )}" class="author-link">${post.author}</a> · ${post.date}`;
 
-  const tags = document.createElement("p");
-  tags.textContent = post.tags.join(", ");
+    const tags = document.createElement("p");
+    tags.textContent = post.tags.join(", ");
 
-  el.appendChild(title);
-  el.appendChild(meta);
-  el.appendChild(tags);
+    el.appendChild(title);
+    el.appendChild(meta);
+    el.appendChild(tags);
 
-  // Add the like button asynchronously
-  createLikeButton(post.link).then((likeBtn) => {
-    el.appendChild(likeBtn);
+    // Add the like button asynchronously
+    createLikeButton(post.link).then((likeBtn) => {
+        el.appendChild(likeBtn);
+        postList.appendChild(el);
+    });
     postList.appendChild(el);
-  });
-  postList.appendChild(el);
-});
+    });
+}
 
 // ❤️ Like button logic
 
