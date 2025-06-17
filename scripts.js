@@ -31,18 +31,19 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 window.db = db; // so it’s usable globally if needed
 
-const authors = {
-  phanuelle: {
-    pic: "assets/authors/Phanuelle_Manuel.jpg",
-    bio: "Founder of LoopLogs, lover of clean code and coffee ☕",
-  },
-  "Jamie R.": {
-    pic: "assets/jamie.png",
-    bio: "CS major, hackathon addict, big fan of VS Code themes.",
-  },
-};
-
 // END FIREBASE SETUP
+
+// const authors = {
+//   phanuelle: {
+//     pic: "assets/authors/Phanuelle_Manuel.jpg",
+//     bio: "Founder of LoopLogs, lover of clean code and coffee ☕",
+//   },
+//   "Jamie": {
+//     pic: "assets/jamie.png",
+//     bio: "CS major, hackathon addict, big fan of VS Code themes.",
+//   },
+// };
+
 
 // Post data used for rendering author.html and posts.html
 
@@ -186,7 +187,7 @@ if (window.location.pathname.includes("author.html")) {
 
       document.getElementById("author-profile-page").innerHTML = `
         <div class="author-full-profile">
-<img src="${author.pic}" class="author-img-large" />
+<img src="${author.image}" class="author-img-large" />
 <h1>${authorId}</h1>
           <p>${author.bio}</p>
           ${
