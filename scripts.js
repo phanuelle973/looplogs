@@ -1,12 +1,11 @@
 // FIREBASE SETUP
 
 // Import the functions you need from the SDKs you need
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// (Make sure these are imported at the top of your HTML or as ES modules if using bundlers)
+// import { initializeApp } from "firebase/app";
+// import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "firebase/firestore";
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBDt3Ybm9mjDn5u85MFhVqB0UYDBiQvrJg",
   authDomain: "looplogs-4a711.firebaseapp.com",
@@ -25,7 +24,6 @@ window.db = db; // so it’s usable globally if needed
 // END FIREBASE SETUP
 
 // Post data used for rendering author.html and posts.html
-
 const posts = [
   {
     title: "Welcome to LoopLogs",
@@ -45,6 +43,7 @@ const posts = [
 
 window.posts = posts;
 
+// DOM elements
 const postList = document.getElementById("post-list");
 const tagSearch = document.getElementById("tag-search");
 const sortDropdown = document.getElementById("sort-select");
@@ -90,10 +89,10 @@ function renderPostList(postArray) {
 
 // Get filtered and sorted posts
 function getFilteredAndSortedPosts() {
-  const tagQuery = document.getElementById("tag-search")?.value.toLowerCase();
-  const sortBy = document.getElementById("sort-select")?.value;
+  const tagQuery = tagSearch?.value.toLowerCase() || "";
+  const sortBy = sortDropdown?.value || "date";
 
-  let result = [...posts];
+  let result = [...window.posts];
 
   // FILTER by tag
   if (tagQuery) {
@@ -121,7 +120,6 @@ function getFilteredAndSortedPosts() {
 }
 
 // ❤️ Like button logic
-
 async function createLikeButton(postId) {
   const db = getFirestore(app);
   const safeId = btoa(postId); // base64-encode
@@ -155,9 +153,9 @@ async function createLikeButton(postId) {
   return btn;
 }
 
+// Fetch like counts for all posts and update window.posts
 async function fetchLikeCounts(posts) {
   const db = getFirestore(app);
-  // Map each post to a promise that fetches its like count
   const updatedPosts = await Promise.all(
     posts.map(async (post) => {
       const safeId = btoa(post.link);
@@ -176,14 +174,15 @@ async function fetchLikeCounts(posts) {
   return updatedPosts;
 }
 
-// After loading the post content
-if (window.location.pathname.includes("author.html")) {
-  // ...existing code for author.html if any...
-}
+// Main logic: fetch like counts, then render and set up event listeners
+async function main() {
+  // Only run on pages with a post list (posts.html, author.html, etc.)
+  if (!postList) return;
 
-// Fetch like counts, then render and set up event listeners
-fetchLikeCounts(posts).then((postsWithLikes) => {
-  window.posts = postsWithLikes;
+  // Fetch like counts and update window.posts
+  window.posts = await fetchLikeCounts(posts);
+
+  // Initial render
   renderPostList(getFilteredAndSortedPosts());
 
   // Re-render on sort or search
@@ -197,7 +196,7 @@ fetchLikeCounts(posts).then((postsWithLikes) => {
       renderPostList(getFilteredAndSortedPosts());
     });
   }
-});
+}
 
-// Initial render
-renderPostList(getFilteredAndSortedPosts());
+// Run main logic
+main();
