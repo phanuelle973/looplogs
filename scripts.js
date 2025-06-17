@@ -79,18 +79,16 @@ if (postList) {
     el.appendChild(meta);
     el.appendChild(tags);
 
-    // Add the like button asynchronously
     createLikeButton(post.link).then((likeBtn) => {
       el.appendChild(likeBtn);
       postList.appendChild(el);
     });
-    postList.appendChild(el);
   });
 }
 
 // ❤️ Like button logic
 
-function createLikeButton(postId, container) {
+async function createLikeButton(postId) {
   const db = getFirestore(app);
   const safeId = btoa(postId); // base64-encode
   const likeRef = doc(db, "likes", safeId);
@@ -112,7 +110,7 @@ function createLikeButton(postId, container) {
   }
 
   button.appendChild(countSpan);
-  updateLikeDisplay();
+  await updateLikeDisplay();
 
   button.addEventListener("click", async () => {
     const snap = await getDoc(likeRef);
@@ -131,7 +129,7 @@ function createLikeButton(postId, container) {
     updateLikeDisplay();
   });
 
-  container.appendChild(button);
+  return button;
 }
 
 // After loading the post content
