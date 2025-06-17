@@ -140,10 +140,18 @@ if (window.location.pathname.includes("author.html")) {
   fetch("authors.json")
     .then((res) => res.json())
     .then((authors) => {
-    //   const author = authors[postAuthorId];
+      //   const author = authors[postAuthorId];
       const urlParams = new URLSearchParams(window.location.search);
       const authorId = urlParams.get("id");
       const author = authors[authorId];
+
+      if (author) {
+        document.getElementById("author-pic").src = author.pic;
+        document.getElementById("author-name").textContent = authorId;
+        document.getElementById("author-bio").textContent = author.bio;
+      } else {
+        document.getElementById("author-name").textContent = "Author not found";
+      }
 
       if (!author) {
         document.getElementById("author-profile-page").innerHTML =
@@ -151,20 +159,23 @@ if (window.location.pathname.includes("author.html")) {
         return;
       }
 
-      const box = document.getElementById("author-box");
-      box.innerHTML = `
-      <div class="author-profile">
-        <img src="${author.image}" alt="${author.id}" class="author-img">
-        <div>
-          <h3>${author.id}</h3>
-          <p>${author.bio}</p>
-          ${
-            author.link
-              ? `<a href="${author.link}" target="_blank">More</a>`
-              : ""
-          }
-        </div>
-      </div>
-    `;
+      //   const box = document.getElementById("author-box");
+      //   box.innerHTML = `
+      //   <div class="author-profile">
+      //     <img src="${author.image}" alt="${author.id}" class="author-img">
+      //     <div>
+      //       <h3>${author.id}</h3>
+      //       <p>${author.bio}</p>
+      //       ${
+      //         author.link
+      //           ? `<a href="${author.link}" target="_blank">More</a>`
+      //           : ""
+      //       }
+      //     </div>
+      //   </div>
+      // `;
+    })
+    .catch((error) => {
+      console.error("Failed to load authors.json:", error);
     });
 }
