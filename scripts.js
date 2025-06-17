@@ -133,20 +133,33 @@ async function createLikeButton(postId) {
       await setDoc(likeRef, { count: 0 });
     }
   } catch (e) {
-    // handle error if needed
+    console.error("Error fetching like count:", e);
   }
 
   const btn = document.createElement("button");
   btn.className = "like-button";
-  btn.textContent = `❤️ Like (${count})`;
+
+  const hasLiked = localStorage.getItem(`liked_${safeId}`) === "true";
+  btn.textContent = hasLiked ? `💔 Unlike (${count})` : `❤️ Like (${count})`;
 
   btn.onclick = async () => {
-    await updateDoc(likeRef, {
-      count: increment(1),
-    });
-    const newSnap = await getDoc(likeRef);
-    const newCount = newSnap.data().count;
-    btn.textContent = `❤️ Like (${newCount})`;
+    const alreadyLiked = localStorage.getItem(`liked_${safeId}`) === "true";
+    const change = alreadyLiked ? -1 : 1;
+
+    try {
+      await updateDoc(likeRef, {
+        count: increment(change),
+      });
+      const newSnap = await getDoc(likeRef);
+      const newCount = newSnap.data().count;
+
+      btn.textContent = alreadyLiked
+        ? `❤️ Like (${newCount})`
+        : `💔 Unlike (${newCount})`;
+      localStorage.setItem(`liked_${safeId}`, !alreadyLiked);
+    } catch (e) {
+      console.error("Error updating like:", e);
+    }
   };
 
   return btn;
