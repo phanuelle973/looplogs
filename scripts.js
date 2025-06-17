@@ -104,10 +104,17 @@ function getFilteredAndSortedPosts() {
 
   // SORT
   if (sortBy === "date") {
+    // Newest first
     result.sort((a, b) => new Date(b.date) - new Date(a.date));
   } else if (sortBy === "likes") {
-    // If you want to sort by likes, you need to fetch like counts for each post
-    // For now, this will just leave the order unchanged unless you implement like count fetching
+    // Most liked first (assumes post.likeCount exists; otherwise, all will be 0)
+    result.sort((a, b) => (b.likeCount || 0) - (a.likeCount || 0));
+  } else if (sortBy === "author") {
+    // Author name A-Z
+    result.sort((a, b) => a.author.localeCompare(b.author));
+  } else if (sortBy === "title") {
+    // Title A-Z
+    result.sort((a, b) => a.title.localeCompare(b.title));
   }
 
   return result;
