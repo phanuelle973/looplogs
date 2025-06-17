@@ -1,15 +1,6 @@
 // FIREBASE SETUP
 
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  increment,
-} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -55,46 +46,49 @@ const posts = [
 window.posts = posts;
 
 const postList = document.getElementById("post-list");
+const tagSearch = document.getElementById('tag-search');
+const sortDropdown = document.getElementById("sort-select");
 
-const sortSelect = document.getElementById("sort-select");
+// Render the post list
+function renderPostList(postArray) {
+  if (!postList) return;
+  postList.innerHTML = "";
+  if (postArray.length === 0) {
+    postList.innerHTML = "<p>No posts found.</p>";
+    return;
+  }
+  postArray.forEach((post) => {
+    const el = document.createElement("div");
+    el.className = "post-preview";
 
-if (postList) {
-  function renderPostList(postArray) {
-    postList.innerHTML = "";
-    postArray.forEach((post) => {
-      const el = document.createElement("div");
-      el.className = "post-preview";
+    const title = document.createElement("h2");
+    const link = document.createElement("a");
+    link.href = post.link;
+    link.textContent = post.title;
+    title.appendChild(link);
 
-      const title = document.createElement("h2");
-      const link = document.createElement("a");
-      link.href = post.link;
-      link.textContent = post.title;
-      title.appendChild(link);
+    const meta = document.createElement("p");
+    meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
+      post.author.toLowerCase()
+    )}" class="author-link">${post.author}</a> · ${post.date}`;
 
-      const meta = document.createElement("p");
-      meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
-        post.author.toLowerCase()
-      )}" class="author-link">${post.author}</a> · ${post.date}`;
+    const tags = document.createElement("p");
+    tags.textContent = post.tags.join(", ");
 
-      const tags = document.createElement("p");
-      tags.textContent = post.tags.join(", ");
+    el.appendChild(title);
+    el.appendChild(meta);
+    el.appendChild(tags);
 
-      el.appendChild(title);
-      el.appendChild(meta);
-      el.appendChild(tags);
-
-      createLikeButton(post.link).then((likeBtn) => {
-        el.appendChild(likeBtn);
-        postList.appendChild(el);
-      });
+    // Add the like button asynchronously
+    createLikeButton(post.link).then((likeBtn) => {
+      el.appendChild(likeBtn);
     });
-  }
 
-  if (postList) {
-    renderPostList(getFilteredAndSortedPosts());
-  }
+    postList.appendChild(el);
+  });
 }
 
+// Get filtered and sorted posts
 function getFilteredAndSortedPosts() {
   const tagQuery = document.getElementById("tag-search")?.value.toLowerCase();
   const sortBy = document.getElementById("sort-select")?.value;
@@ -103,10 +97,8 @@ function getFilteredAndSortedPosts() {
 
   // FILTER by tag
   if (tagQuery) {
-    result = result.filter(
-      (post) =>
-        post.tags &&
-        post.tags.some((tag) => tag.toLowerCase().includes(tagQuery))
+    result = result.filter((post) =>
+      post.tags.some((tag) => tag.toLowerCase().includes(tagQuery))
     );
   }
 
@@ -114,11 +106,8 @@ function getFilteredAndSortedPosts() {
   if (sortBy === "date") {
     result.sort((a, b) => new Date(b.date) - new Date(a.date));
   } else if (sortBy === "likes") {
-    result.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-  } else if (sortBy === "author") {
-    result.sort((a, b) => a.author.localeCompare(b.author));
-  } else if (sortBy === "title") {
-    result.sort((a, b) => a.title.localeCompare(b.title));
+    // If you want to sort by likes, you need to fetch like counts for each post
+    // For now, this will just leave the order unchanged unless you implement like count fetching
   }
 
   return result;
@@ -130,85 +119,52 @@ async function createLikeButton(postId) {
   const db = getFirestore(app);
   const safeId = btoa(postId); // base64-encode
   const likeRef = doc(db, "likes", safeId);
-  const userLikedKey = `liked_${safeId}`;
-  const hasLiked = localStorage.getItem(userLikedKey) === "true";
 
-  const button = document.createElement("button");
-  const countSpan = document.createElement("span");
-  button.className = "like-button";
-
-  async function updateLikeDisplay() {
-    const snap = await getDoc(likeRef);
-    const count = snap.exists() ? snap.data().count || 0 : 0;
-    countSpan.textContent = `❤️ ${count}`;
-    button.classList.toggle(
-      "liked",
-      localStorage.getItem(userLikedKey) === "true"
-    );
+  let count = 0;
+  try {
+    const docSnap = await getDoc(likeRef);
+    if (docSnap.exists()) {
+      count = docSnap.data().count || 0;
+    } else {
+      await setDoc(likeRef, { count: 0 });
+    }
+  } catch (e) {
+    // handle error if needed
   }
 
-  button.appendChild(countSpan);
-  await updateLikeDisplay();
+  const btn = document.createElement("button");
+  btn.className = "like-button";
+  btn.textContent = `❤️ Like (${count})`;
 
-  button.addEventListener("click", async () => {
-    const snap = await getDoc(likeRef);
-    let count = snap.exists() ? snap.data().count || 0 : 0;
+  btn.onclick = async () => {
+    await updateDoc(likeRef, {
+      count: increment(1),
+    });
+    const newSnap = await getDoc(likeRef);
+    const newCount = newSnap.data().count;
+    btn.textContent = `❤️ Like (${newCount})`;
+  };
 
-    if (localStorage.getItem(userLikedKey) === "true") {
-      // Unlike
-      await setDoc(likeRef, { count: Math.max(0, count - 1) });
-      localStorage.removeItem(userLikedKey);
-    } else {
-      // Like
-      await setDoc(likeRef, { count: count + 1 });
-      localStorage.setItem(userLikedKey, "true");
-    }
-
-    updateLikeDisplay();
-  });
-
-  return button;
+  return btn;
 }
 
 // After loading the post content
 if (window.location.pathname.includes("author.html")) {
-  const postAuthorId = new URLSearchParams(window.location.search).get("id");
-
-  fetch("authors.json")
-    .then((res) => res.json())
-    .then((authors) => {
-      const author = authors[postAuthorId];
-      if (!author) {
-        console.error("Author not found:", postAuthorId);
-        return;
-      }
-      const box = document.getElementById("author-box");
-      box.innerHTML = `
-        <div class="author-profile">
-          <img src="${author.image}" alt="${author.id}" class="author-img">
-          <div>
-            <h3>${author.id}</h3>
-            <p>${author.bio}</p>
-            ${
-              author.link
-                ? `<a href="${author.link}" target="_blank">More</a>`
-                : ""
-            }
-          </div>
-        </div>
-      `;
-    })
-    .catch((error) => {
-      console.error("Failed to load authors.json:", error);
-    });
+  // ...existing code for author.html if any...
 }
 
-document.getElementById("sort-select").addEventListener("change", () => {
-  renderPostList(getFilteredAndSortedPosts());
-});
+// Event listeners for sort and search
+if (sortDropdown) {
+  sortDropdown.addEventListener("change", () => {
+    renderPostList(getFilteredAndSortedPosts());
+  });
+}
 
-document.getElementById("tag-search").addEventListener("input", () => {
-  renderPostList(getFilteredAndSortedPosts());
-});
+if (tagSearch) {
+  tagSearch.addEventListener("input", () => {
+    renderPostList(getFilteredAndSortedPosts());
+  });
+}
 
+// Initial render
 renderPostList(getFilteredAndSortedPosts());
