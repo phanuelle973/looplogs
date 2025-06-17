@@ -146,13 +146,18 @@ async function createLikeButton(postId) {
 }
 
 // After loading the post content
+if (window.location.pathname.includes("author.html")) {
 const postAuthorId = new URLSearchParams(window.location.search).get("id");
 
 fetch("authors.json")
   .then((res) => res.json())
   .then((authors) => {
     const author = authors[postAuthorId];
-    if (!author) return;
+      if (!author) {
+        document.getElementById("author-profile-page").innerHTML =
+          "<p>Author not found.</p>";
+        return;
+      }
 
     const box = document.getElementById("author-box");
     box.innerHTML = `
@@ -170,32 +175,4 @@ fetch("authors.json")
       </div>
     `;
   });
-
-if (window.location.pathname.includes("author.html")) {
-  const authorParams = new URLSearchParams(window.location.search);
-  const authorId = new URLSearchParams(window.location.search).get("id");
-
-  fetch("authors.json")
-    .then((res) => res.json())
-    .then((data) => {
-      const author = data[authorId];
-      if (!author) {
-        document.getElementById("author-profile-page").innerHTML =
-          "<p>Author not found.</p>";
-        return;
-      }
-
-      document.getElementById("author-profile-page").innerHTML = `
-        <div class="author-full-profile">
-<img src="${author.image}" class="author-img-large" />
-<h1>${authorId}</h1>
-          <p>${author.bio}</p>
-          ${
-            author.link
-              ? `<a href="${author.link}" target="_blank">More</a>`
-              : ""
-          }
-        </div>
-      `;
-    });
 }
