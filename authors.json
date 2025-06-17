@@ -9,7 +9,12 @@
   },
   "jamie": {
     "id": "Jamie L.",
-    "bio": "Aspiring game dev who loves GWC + cats 🐱",
+    "bio": "Aspiring game dev who loves GWC + cats ?",
     "image": "assets/authors/jamie.png"
+  },
+  "": {
+    "name": "Percy Jackson",
+    "id": "",
+    "image": "https://via.placeholder.com/150"
   }
 }
