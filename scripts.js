@@ -197,13 +197,27 @@ async function main() {
   }
 }
 
+let firebasePosts = [];
+
 async function loadPostsFromFirestore() {
   const postList = document.getElementById("post-list");
   if (!postList) return;
 
-  const snapshot = await db.collection("posts").orderBy("timestamp", "desc").get();
-  snapshot.forEach(doc => {
-    const data = doc.data();
+  const snapshot = await db.collection("posts").get();
+  firebasePosts = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+    timestamp: doc.data().timestamp?.toDate?.() || new Date()  // fallback
+  }));
+
+  displayPosts(firebasePosts); // show initially
+}
+
+function displayPosts(posts) {
+  const postList = document.getElementById("post-list");
+  postList.innerHTML = "";
+
+  posts.forEach(data => {
     const post = document.createElement("div");
     post.className = "post-card";
     post.innerHTML = `
@@ -211,7 +225,7 @@ async function loadPostsFromFirestore() {
       <p>${data.content}</p>
       <p><strong>Author:</strong> ${data.author}</p>
       <p><strong>Tags:</strong> ${data.tags}</p>
-      <p><small>${new Date(data.timestamp.seconds * 1000).toLocaleString()}</small></p>
+      <p><small>${new Date(data.timestamp).toLocaleString()}</small></p>
     `;
     postList.appendChild(post);
   });
