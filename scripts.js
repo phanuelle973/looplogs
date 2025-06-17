@@ -49,7 +49,7 @@ const authors = {
 const posts = [
   {
     title: "Welcome to LoopLogs",
-    author: "Phanuelle",
+    author: "phanuelle",
     date: "June 15, 2025",
     link: "post.html?file=posts/welcome.md",
     tags: ["Reflections"],
