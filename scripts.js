@@ -143,24 +143,10 @@ if (window.location.pathname.includes("author.html")) {
     .then((res) => res.json())
     .then((authors) => {
         const author = authors[postAuthorId];
-    //   const urlParams = new URLSearchParams(window.location.search);
-    //   const authorId = urlParams.get("id");
-    //   const author = authors[authorId];
-
-    //   if (author) {
-    //     document.getElementById("author-pic").src = author.image;
-    //     document.getElementById("author-name").textContent = authorId;
-    //     document.getElementById("author-bio").textContent = author.bio;
-    //   } else {
-    //     document.getElementById("author-name").textContent = "Author not found";
-    //   }
-
-    //   if (!author) {
-    //     document.getElementById("author-profile-page").innerHTML =
-    //       "<p>Author not found.</p>";
-    //     return;
-    //   }
-
+        if (!author) {
+          console.error("Author not found:", postAuthorId);
+          return;
+        }
         const box = document.getElementById("author-box");
         box.innerHTML = `
         <div class="author-profile">
