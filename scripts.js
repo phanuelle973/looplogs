@@ -32,7 +32,7 @@ const db = getFirestore(app);
 window.db = db; // so it’s usable globally if needed
 
 const authors = {
-  Phanuelle: {
+  phanuelle: {
     pic: "assets/authors/Phanuelle_Manuel.jpg",
     bio: "Founder of LoopLogs, lover of clean code and coffee ☕",
   },
