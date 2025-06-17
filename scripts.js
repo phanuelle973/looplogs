@@ -140,7 +140,11 @@ if (window.location.pathname.includes("author.html")) {
   fetch("authors.json")
     .then((res) => res.json())
     .then((authors) => {
-      const author = authors[postAuthorId];
+    //   const author = authors[postAuthorId];
+      const urlParams = new URLSearchParams(window.location.search);
+      const authorId = urlParams.get("id");
+      const author = authors[authorId];
+
       if (!author) {
         document.getElementById("author-profile-page").innerHTML =
           "<p>Author not found.</p>";
