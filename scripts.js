@@ -90,49 +90,44 @@ if (postList) {
 
 // ❤️ Like button logic
 
-async function createLikeButton(postId) {
-  const db = window.db;
-  const safeId = postId.replace(/\W+/g, "_");
-  const docRef = doc(db, "likes", safeId);
-  const docSnap = await getDoc(docRef);
+function createLikeButton(postId, container) {
+  const db = getFirestore(app);
+  const likeRef = doc(db, 'likes', postId);
+  const userLikedKey = `liked_${postId}`;
+  const hasLiked = localStorage.getItem(userLikedKey) === 'true';
 
-  let count = 0;
-  if (docSnap.exists()) {
-    count = docSnap.data().count || 0;
-  } else {
-    await setDoc(docRef, { count: 0 });
+  const button = document.createElement('button');
+  const countSpan = document.createElement('span');
+  button.className = 'like-button';
+
+  async function updateLikeDisplay() {
+    const snap = await getDoc(likeRef);
+    const count = snap.exists() ? snap.data().count || 0 : 0;
+    countSpan.textContent = `❤️ ${count}`;
+    button.classList.toggle('liked', localStorage.getItem(userLikedKey) === 'true');
   }
 
-  const btn = document.createElement("button");
-  btn.className = "like-button";
+  button.appendChild(countSpan);
+  updateLikeDisplay();
 
-  const likedKey = `liked-${safeId}`;
-  const alreadyLiked = localStorage.getItem(likedKey);
+  button.addEventListener('click', async () => {
+    const snap = await getDoc(likeRef);
+    let count = snap.exists() ? snap.data().count || 0 : 0;
 
-  if (alreadyLiked) {
-    btn.textContent = `❤️ Liked (${count})`;
-    btn.classList.add("liked");
-  } else {
-    btn.textContent = `❤️ Like (${count})`;
-  }
+    if (localStorage.getItem(userLikedKey) === 'true') {
+      // Unlike
+      await setDoc(likeRef, { count: Math.max(0, count - 1) });
+      localStorage.removeItem(userLikedKey);
+    } else {
+      // Like
+      await setDoc(likeRef, { count: count + 1 });
+      localStorage.setItem(userLikedKey, 'true');
+    }
 
-  btn.onclick = async () => {
-    if (localStorage.getItem(likedKey)) return;
+    updateLikeDisplay();
+  });
 
-    await updateDoc(docRef, {
-      count: increment(1),
-    });
-
-    localStorage.setItem(likedKey, "true");
-
-    const newSnap = await getDoc(docRef);
-    const newCount = newSnap.data().count;
-    btn.textContent = `❤️ Liked (${newCount})`;
-    btn.classList.add("liked");
-  };
-  console.log("Already liked?", localStorage.getItem(likedKey));
-
-  return btn;
+  container.appendChild(button);
 }
 
 // After loading the post content
