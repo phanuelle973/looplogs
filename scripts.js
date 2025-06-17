@@ -58,23 +58,33 @@ const postList = document.getElementById("post-list");
 
 const sortSelect = document.getElementById("sort-select");
 
-if (sortSelect) {
-  sortSelect.addEventListener("change", () => {
-    const sortBy = sortSelect.value;
-    let sortedPosts = [...posts];
+function getFilteredAndSortedPosts() {
+  const tagQuery = document.getElementById("tag-search")?.value.toLowerCase();
+  const sortBy = document.getElementById("sort-select")?.value;
 
-    if (sortBy === "date") {
-      sortedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
-    } else if (sortBy === "likes") {
-      sortedPosts.sort((a, b) => (b.likes || 0) - (a.likes || 0));
-    } else if (sortBy === "author") {
-      sortedPosts.sort((a, b) => a.author.localeCompare(b.author));
-    } else if (sortBy === "title") {
-      sortedPosts.sort((a, b) => a.title.localeCompare(b.title));
-    }
+  let result = [...posts];
 
-    renderPostList(sortedPosts);
-  });
+  // FILTER by tag
+  if (tagQuery) {
+    result = result.filter(
+      (post) =>
+        post.tags &&
+        post.tags.some((tag) => tag.toLowerCase().includes(tagQuery))
+    );
+  }
+
+  // SORT
+  if (sortBy === "date") {
+    result.sort((a, b) => new Date(b.date) - new Date(a.date));
+  } else if (sortBy === "likes") {
+    result.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+  } else if (sortBy === "author") {
+    result.sort((a, b) => a.author.localeCompare(b.author));
+  } else if (sortBy === "title") {
+    result.sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  return result;
 }
 
 if (postList) {
@@ -110,7 +120,7 @@ if (postList) {
   }
 
   if (postList) {
-    renderPostList(posts);
+    renderPostList(getFilteredAndSortedPosts());
   }
 }
 
@@ -193,11 +203,10 @@ if (window.location.pathname.includes("author.html")) {
     });
 }
 
-document.getElementById("tag-search").addEventListener("input", (e) => {
-  const query = e.target.value.toLowerCase();
-  const filteredPosts = posts.filter(
-    (post) =>
-      post.tags && post.tags.some((tag) => tag.toLowerCase().includes(query))
-  );
-  renderPostList(filteredPosts); // Use the function that works
+document.getElementById("tag-search").addEventListener("input", () => {
+  renderPostList(getFilteredAndSortedPosts());
+});
+
+document.getElementById("sort-select").addEventListener("change", () => {
+  renderPostList(getFilteredAndSortedPosts());
 });
