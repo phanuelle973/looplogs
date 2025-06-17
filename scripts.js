@@ -146,7 +146,7 @@ if (window.location.pathname.includes("author.html")) {
       const author = authors[authorId];
 
       if (author) {
-        document.getElementById("author-pic").src = author.pic;
+        document.getElementById("author-pic").src = author.image;
         document.getElementById("author-name").textContent = authorId;
         document.getElementById("author-bio").textContent = author.bio;
       } else {
