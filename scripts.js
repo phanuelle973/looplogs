@@ -32,7 +32,7 @@ const db = getFirestore(app);
 window.db = db; // so it’s usable globally if needed
 
 const authors = {
-  "phanuelle": {
+  phanuelle: {
     pic: "assets/authors/Phanuelle_Manuel.jpg",
     bio: "Founder of LoopLogs, lover of clean code and coffee ☕",
   },
@@ -79,7 +79,7 @@ posts.forEach((post) => {
 
   const meta = document.createElement("p");
   meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
-    post.author
+    post.author.toLowerCase()
   )}" class="author-link">${post.author}</a> · ${post.date}`;
 
   const tags = document.createElement("p");
@@ -186,8 +186,8 @@ if (window.location.pathname.includes("author.html")) {
 
       document.getElementById("author-profile-page").innerHTML = `
         <div class="author-full-profile">
-          <img src="${author.image}" class="author-img-large" />
-          <h1>${author.name}</h1>
+<img src="${author.pic}" class="author-img-large" />
+<h1>${authorId}</h1>
           <p>${author.bio}</p>
           ${
             author.link
