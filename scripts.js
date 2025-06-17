@@ -44,7 +44,6 @@ window.db = db; // so it’s usable globally if needed
 //   },
 // };
 
-
 // Post data used for rendering author.html and posts.html
 
 const posts = [
@@ -147,20 +146,20 @@ async function createLikeButton(postId) {
 
 // After loading the post content
 if (window.location.pathname.includes("author.html")) {
-const postAuthorId = new URLSearchParams(window.location.search).get("id");
+  const postAuthorId = new URLSearchParams(window.location.search).get("id");
 
-fetch("authors.json")
-  .then((res) => res.json())
-  .then((authors) => {
-    const author = authors[postAuthorId];
+  fetch("authors.json")
+    .then((res) => res.json())
+    .then((authors) => {
+      const author = authors[postAuthorId];
       if (!author) {
         document.getElementById("author-profile-page").innerHTML =
           "<p>Author not found.</p>";
         return;
       }
 
-    const box = document.getElementById("author-box");
-    box.innerHTML = `
+      const box = document.getElementById("author-box");
+      box.innerHTML = `
       <div class="author-profile">
         <img src="${author.image}" alt="${author.id}" class="author-img">
         <div>
@@ -174,5 +173,5 @@ fetch("authors.json")
         </div>
       </div>
     `;
-  });
+    });
 }
