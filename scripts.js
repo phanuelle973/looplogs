@@ -233,6 +233,60 @@ function displayPosts(posts) {
 
 document.addEventListener("DOMContentLoaded", loadPostsFromFirestore);
 
+async function loadAuthorData(username) {
+  const res = await fetch('authors.json');
+  const authors = await res.json();
+  return authors[username];
+}
+
+function getAuthorFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('id');
+}
+
+function filterPostsByAuthor(username) {
+  return window.posts.filter(
+    post => post.author.toLowerCase().replace(/\s/g, '') === username
+  );
+}
+
+async function renderAuthorPage() {
+  const username = getAuthorFromUrl();
+  if (!username) return;
+
+  // Load author data
+  const author = await loadAuthorData(username);
+  if (!author) return;
+
+  // Update author header
+  const authorHeader = document.getElementById('author-header');
+  if (authorHeader) {
+    authorHeader.textContent = `Posts by ${author.name || author.id || username}`;
+  }
+
+  // Show author profile
+  const profileBox = document.getElementById('author-profile-page');
+  if (profileBox) {
+    profileBox.innerHTML = `
+      <img src="${author.image}" alt="${author.name || author.id}" style="max-width:120px;border-radius:50%;">
+      <h2>${author.name || author.id}</h2>
+      <p>${author.bio || ''}</p>
+      ${author.link ? `<a href="${author.link}" target="_blank">Profile</a>` : ''}
+    `;
+  }
+
+  // Filter and render posts by this author
+  const filteredPosts = window.posts.filter(
+    post => post.author.toLowerCase().replace(/\s/g, '') === username
+  );
+  renderPostList(filteredPosts);
+}
+
+if (window.location.pathname.includes('author.html')) {
+  main().then(renderAuthorPage);
+} else {
+  main();
+}
 
 // Run main logic
 main();
