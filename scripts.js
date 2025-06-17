@@ -46,7 +46,7 @@ const posts = [
 window.posts = posts;
 
 const postList = document.getElementById("post-list");
-const tagSearch = document.getElementById('tag-search');
+const tagSearch = document.getElementById("tag-search");
 const sortDropdown = document.getElementById("sort-select");
 
 // Render the post list
@@ -155,23 +155,49 @@ async function createLikeButton(postId) {
   return btn;
 }
 
+async function fetchLikeCounts(posts) {
+  const db = getFirestore(app);
+  // Map each post to a promise that fetches its like count
+  const updatedPosts = await Promise.all(
+    posts.map(async (post) => {
+      const safeId = btoa(post.link);
+      const likeRef = doc(db, "likes", safeId);
+      try {
+        const docSnap = await getDoc(likeRef);
+        return {
+          ...post,
+          likeCount: docSnap.exists() ? docSnap.data().count || 0 : 0,
+        };
+      } catch (e) {
+        return { ...post, likeCount: 0 };
+      }
+    })
+  );
+  return updatedPosts;
+}
+
 // After loading the post content
 if (window.location.pathname.includes("author.html")) {
   // ...existing code for author.html if any...
 }
 
-// Event listeners for sort and search
-if (sortDropdown) {
-  sortDropdown.addEventListener("change", () => {
-    renderPostList(getFilteredAndSortedPosts());
-  });
-}
+// Fetch like counts, then render and set up event listeners
+fetchLikeCounts(posts).then((postsWithLikes) => {
+  window.posts = postsWithLikes;
+  renderPostList(getFilteredAndSortedPosts());
 
-if (tagSearch) {
-  tagSearch.addEventListener("input", () => {
-    renderPostList(getFilteredAndSortedPosts());
-  });
-}
+  // Re-render on sort or search
+  if (sortDropdown) {
+    sortDropdown.addEventListener("change", () => {
+      renderPostList(getFilteredAndSortedPosts());
+    });
+  }
+  if (tagSearch) {
+    tagSearch.addEventListener("input", () => {
+      renderPostList(getFilteredAndSortedPosts());
+    });
+  }
+});
 
 // Initial render
 renderPostList(getFilteredAndSortedPosts());
