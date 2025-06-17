@@ -56,34 +56,60 @@ window.posts = posts;
 
 const postList = document.getElementById("post-list");
 
-if (postList) {
-  posts.forEach((post) => {
-    const el = document.createElement("div");
-    el.className = "post-preview";
+const sortSelect = document.getElementById("sort-select");
 
-    const title = document.createElement("h2");
-    const link = document.createElement("a");
-    link.href = post.link;
-    link.textContent = post.title;
-    title.appendChild(link);
+if (sortSelect) {
+  sortSelect.addEventListener("change", () => {
+    const sortBy = sortSelect.value;
+    let sortedPosts = [...posts];
 
-    const meta = document.createElement("p");
-    meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
-      post.author.toLowerCase()
-    )}" class="author-link">${post.author}</a> · ${post.date}`;
+    if (sortBy === "newest") {
+      sortedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    } else if (sortBy === "oldest") {
+      sortedPosts.sort((a, b) => new Date(a.date) - new Date(b.date));
+    } else if (sortBy === "a-z") {
+      sortedPosts.sort((a, b) => a.title.localeCompare(b.title));
+    }
 
-    const tags = document.createElement("p");
-    tags.textContent = post.tags.join(", ");
-
-    el.appendChild(title);
-    el.appendChild(meta);
-    el.appendChild(tags);
-
-    createLikeButton(post.link).then((likeBtn) => {
-      el.appendChild(likeBtn);
-      postList.appendChild(el);
-    });
+    renderPostList(sortedPosts);
   });
+}
+
+if (postList) {
+  function renderPostList(postArray) {
+    postList.innerHTML = "";
+    postArray.forEach((post) => {
+      const el = document.createElement("div");
+      el.className = "post-preview";
+
+      const title = document.createElement("h2");
+      const link = document.createElement("a");
+      link.href = post.link;
+      link.textContent = post.title;
+      title.appendChild(link);
+
+      const meta = document.createElement("p");
+      meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
+        post.author.toLowerCase()
+      )}" class="author-link">${post.author}</a> · ${post.date}`;
+
+      const tags = document.createElement("p");
+      tags.textContent = post.tags.join(", ");
+
+      el.appendChild(title);
+      el.appendChild(meta);
+      el.appendChild(tags);
+
+      createLikeButton(post.link).then((likeBtn) => {
+        el.appendChild(likeBtn);
+        postList.appendChild(el);
+      });
+    });
+  }
+
+  if (postList) {
+    renderPostList(posts);
+  }
 }
 
 // ❤️ Like button logic
