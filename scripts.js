@@ -39,14 +39,14 @@ const posts = [
   {
     title: "Welcome to LoopLogs",
     author: "Phanuelle",
-    date: "June 15, 2025",
+    date: "2025-06-15",
     link: "post.html?file=posts/welcome.md",
     tags: ["Reflections"],
   },
   {
     title: "My First Hackathon",
     author: "Jamie R.",
-    date: "June 16, 2025",
+    date: "2025-06-16",
     link: "post.html?file=posts/hackathon.md",
     tags: ["Projects", "Coding Journey"],
   },
