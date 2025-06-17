@@ -78,7 +78,9 @@ posts.forEach((post) => {
   title.appendChild(link);
 
   const meta = document.createElement("p");
-  meta.textContent = `By ${post.author} · ${post.date}`;
+  meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
+    post.author
+  )}" class="author-link">${post.author}</a> · ${post.date}`;
 
   const tags = document.createElement("p");
   tags.textContent = post.tags.join(", ");
