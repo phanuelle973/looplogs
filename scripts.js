@@ -53,7 +53,7 @@ function renderPostList(postArray) {
     )}" class="author-link">${post.author}</a> · ${post.date}`;
 
     const tags = document.createElement("p");
-    tags.textContent = post.tags.join(", ");
+    tags.textContent = post.categories.join(", ");
 
     el.appendChild(title);
     el.appendChild(meta);
@@ -78,7 +78,7 @@ function getFilteredAndSortedPosts() {
   // FILTER by tag
   if (tagQuery) {
     result = result.filter((post) =>
-      post.tags.some((tag) => tag.toLowerCase().includes(tagQuery))
+      post.categories.some((tag) => tag.toLowerCase().includes(tagQuery))
     );
   }
 
