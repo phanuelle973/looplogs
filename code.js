@@ -17,7 +17,6 @@ function onFormSubmit(e) {
 date: "${timestamp}
 title: "${title}"
 author: "${username}"
-content: "${content}
 categories: [${categories.split(',').map(tag => `"${tag.trim()}"`).join(', ')}]
 ---
 
