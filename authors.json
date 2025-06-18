@@ -97,5 +97,14 @@
     "bio": "so cool girl",
     "image": "https://via.placeholder.com/150",
     "link": ""
+  },
+  "thecleaners": {
+    "id": "thecleaners",
+    "username": "thecleaners",
+    "name": "Clean up",
+    "email": "phanmanuel9@gmail.com",
+    "bio": "We clean",
+    "image": "https://via.placeholder.com/150",
+    "link": ""
   }
 }
