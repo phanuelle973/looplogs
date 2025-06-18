@@ -2,25 +2,25 @@
 
 // Import the functions you need from the SDKs you need
 // (Make sure these are imported at the top of your HTML or as ES modules if using bundlers)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  increment,
-} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyBDt3Ybm9mjDn5u85MFhVqB0UYDBiQvrJg",
-  authDomain: "looplogs-4a711.firebaseapp.com",
-  projectId: "looplogs-4a711",
-  storageBucket: "looplogs-4a711.firebasestorage.app",
-  messagingSenderId: "122145076851",
-  appId: "1:122145076851:web:afc68cf5c11c2c8ee95c06",
-  measurementId: "G-WXD0LKBL8N",
-};
+// import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+// import {
+//   getFirestore,
+//   doc,
+//   getDoc,
+//   setDoc,
+//   updateDoc,
+//   increment,
+// } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+// // Your web app's Firebase configuration
+// const firebaseConfig = {
+//   apiKey: "AIzaSyBDt3Ybm9mjDn5u85MFhVqB0UYDBiQvrJg",
+//   authDomain: "looplogs-4a711.firebaseapp.com",
+//   projectId: "looplogs-4a711",
+//   storageBucket: "looplogs-4a711.firebasestorage.app",
+//   messagingSenderId: "122145076851",
+//   appId: "1:122145076851:web:afc68cf5c11c2c8ee95c06",
+//   measurementId: "G-WXD0LKBL8N",
+// };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -229,21 +229,21 @@ async function main() {
   }
 }
 
-let firebasePosts = [];
+// let firebasePosts = [];
 
-async function loadPostsFromFirestore() {
-  const postList = document.getElementById("post-list");
-  if (!postList) return;
+// async function loadPostsFromFirestore() {
+//   const postList = document.getElementById("post-list");
+//   if (!postList) return;
 
-  const snapshot = await db.collection("posts").get();
-  firebasePosts = snapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-    timestamp: doc.data().timestamp?.toDate?.() || new Date(), // fallback
-  }));
+//   const snapshot = await db.collection("posts").get();
+//   firebasePosts = snapshot.docs.map((doc) => ({
+//     id: doc.id,
+//     ...doc.data(),
+//     timestamp: doc.data().timestamp?.toDate?.() || new Date(), // fallback
+//   }));
 
-  displayPosts(firebasePosts); // show initially
-}
+//   displayPosts(firebasePosts); // show initially
+// }
 
 function displayPosts(posts) {
   const postList = document.getElementById("post-list");
