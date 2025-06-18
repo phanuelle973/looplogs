@@ -30,22 +30,22 @@ window.db = db; // so it’s usable globally if needed
 // END FIREBASE SETUP
 
 // Post data used for rendering author.html and posts.html
-const posts = [
-  {
-    title: "Welcome to LoopLogs",
-    author: "Phanuelle",
-    date: "2025-06-15",
-    link: "post.html?file=posts/welcome.md",
-    tags: ["Reflections"],
-  },
-  {
-    title: "My First Hackathon",
-    author: "Jamie R.",
-    date: "2025-06-16",
-    link: "post.html?file=posts/hackathon.md",
-    tags: ["Projects", "Coding Journey"],
-  },
-];
+// const posts = [
+//   {
+//     title: "Welcome to LoopLogs",
+//     author: "Phanuelle",
+//     date: "2025-06-15",
+//     link: "post.html?file=posts/welcome.md",
+//     tags: ["Reflections"],
+//   },
+//   {
+//     title: "My First Hackathon",
+//     author: "Jamie R.",
+//     date: "2025-06-16",
+//     link: "post.html?file=posts/hackathon.md",
+//     tags: ["Projects", "Coding Journey"],
+//   },
+// ];
 
 
 // DOM elements
