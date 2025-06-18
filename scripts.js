@@ -47,7 +47,16 @@ const posts = [
   },
 ];
 
-window.posts = posts;
+
+async function fetchPostsJson() {
+  const res = await fetch("posts.json");
+  const data = await res.json();
+  window.posts = await fetchLikeCounts(data); // include like counts
+  renderPostList(getFilteredAndSortedPosts());
+}
+
+window.posts = await fetchPostsJson();
+
 
 // DOM elements
 const postList = document.getElementById("post-list");
