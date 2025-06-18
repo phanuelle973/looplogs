@@ -23,9 +23,9 @@
 // };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-window.db = db; // so it’s usable globally if needed
+// const app = initializeApp(firebaseConfig);
+// const db = getFirestore(app);
+// window.db = db; // so it’s usable globally if needed
 
 // END FIREBASE SETUP
 
