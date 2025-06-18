@@ -23,7 +23,7 @@ const sortDropdown = document.getElementById("sort-select");
 async function fetchPostsJson() {
   const res = await fetch("posts.json");
   const data = await res.json();
-  window.posts = await fetchLikeCounts(data); // include like counts
+  window.posts =  data; // include like counts
   renderPostList(getFilteredAndSortedPosts());
 }
 
@@ -102,71 +102,60 @@ function getFilteredAndSortedPosts() {
 
 // ❤️ Like button logic
 async function createLikeButton(postId) {
-  const safeId = btoa(postId); // base64-encode
-  const likeRef = doc(db, "likes", safeId);
+//   const safeId = btoa(postId); // base64-encode
+//   const likeRef = doc(db, "likes", safeId);
 
-  let count = 0;
-  try {
-    const docSnap = await getDoc(likeRef);
-    if (docSnap.exists()) {
-      count = docSnap.data().count || 0;
-    } else {
-      await setDoc(likeRef, { count: 0 });
-    }
-  } catch (e) {
-    console.error("Error fetching like count:", e);
-  }
+//   let count = 0;
+//   try {
+//     const docSnap = await getDoc(likeRef);
+//     if (docSnap.exists()) {
+//       count = docSnap.data().count || 0;
+//     } else {
+//       await setDoc(likeRef, { count: 0 });
+//     }
+//   } catch (e) {
+//     console.error("Error fetching like count:", e);
+//   }
 
+//   const btn = document.createElement("button");
+//   btn.className = "like-button";
+
+//   const hasLiked = localStorage.getItem(`liked_${safeId}`) === "true";
+//   btn.textContent = hasLiked ? `💔 Unlike (${count})` : `❤️ Like (${count})`;
+
+//   btn.onclick = async () => {
+//     const alreadyLiked = localStorage.getItem(`liked_${safeId}`) === "true";
+
+//     try {
+//       if (alreadyLiked) {
+//         await updateDoc(likeRef, { count: increment(-1) });
+//         localStorage.removeItem(`liked_${safeId}`);
+//       } else {
+//         await updateDoc(likeRef, { count: increment(1) });
+//         localStorage.setItem(`liked_${safeId}`, "true");
+//       }
+
+//       const newSnap = await getDoc(likeRef);
+//       const newCount = newSnap.data().count;
+
+//       btn.textContent = alreadyLiked
+//         ? `❤️ Like (${newCount})`
+//         : `💔 Unlike (${newCount})`;
+//     } catch (e) {
+//       console.error("Error updating like:", e);
+    // }
+//   };
   const btn = document.createElement("button");
   btn.className = "like-button";
+  btn.textContent = "❤️ Like";
 
-  const hasLiked = localStorage.getItem(`liked_${safeId}`) === "true";
-  btn.textContent = hasLiked ? `💔 Unlike (${count})` : `❤️ Like (${count})`;
-
-  btn.onclick = async () => {
-    const alreadyLiked = localStorage.getItem(`liked_${safeId}`) === "true";
-
-    try {
-      if (alreadyLiked) {
-        await updateDoc(likeRef, { count: increment(-1) });
-        localStorage.removeItem(`liked_${safeId}`);
-      } else {
-        await updateDoc(likeRef, { count: increment(1) });
-        localStorage.setItem(`liked_${safeId}`, "true");
-      }
-
-      const newSnap = await getDoc(likeRef);
-      const newCount = newSnap.data().count;
-
-      btn.textContent = alreadyLiked
-        ? `❤️ Like (${newCount})`
-        : `💔 Unlike (${newCount})`;
-    } catch (e) {
-      console.error("Error updating like:", e);
-    }
-  };
 
   return btn;
 }
 
 // Fetch like counts for all posts and update window.posts
 async function fetchLikeCounts(posts) {
-  const updatedPosts = await Promise.all(
-    posts.map(async (post) => {
-      const safeId = btoa(post.link);
-      const likeRef = doc(db, "likes", safeId);
-      try {
-        const docSnap = await getDoc(likeRef);
-        return {
-          ...post,
-          likeCount: docSnap.exists() ? docSnap.data().count || 0 : 0,
-        };
-      } catch (e) {
-        return { ...post, likeCount: 0 };
-      }
-    })
-  );
-  return updatedPosts;
+  return posts.map(post => ({ ...post, likeCount: 0 }));
 }
 
 // Main logic: fetch like counts, then render and set up event listeners
@@ -276,6 +265,3 @@ if (window.location.pathname.includes("author.html")) {
 } else {
   main();
 }
-
-// Run main logic
-main();
