@@ -25,7 +25,7 @@ ${content}
 `;
 
   createFileInRepo(filename, body);
-  updatePostsJson(title, username, date, categories, filename);
+  updatePostsJson(timestamp, title, username, content, categories, filename);
   updateAuthorsJson(username, authorName, authorEmail, authorBio, authorImage, authorLink);
   Logger.log("Done running form logic");
 
@@ -131,7 +131,7 @@ function updateAuthorsJson(username, authorName, authorEmail, authorBio, authorI
 
 
 
-function updatePostsJson(title, username, date, categories, filename) {
+function updatePostsJson(date, title, username, content, categories, filename) {
   const repo = 'phanuelle973/looplogs';
   const path = 'posts.json';
   const token = ''; // your GitHub token
@@ -157,9 +157,10 @@ function updatePostsJson(title, username, date, categories, filename) {
 
   // Step 2: Add new post metadata
   posts.push({
+    timestamp: date,
     title: title,
     author: username,
-    date: date,
+    content: content,
     categories: categories.split(',').map(tag => tag.trim()),
     filename: `posts/${filename}`
   });
