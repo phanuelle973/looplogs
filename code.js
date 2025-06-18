@@ -25,6 +25,7 @@ ${content}
 `;
 
   createFileInRepo(filename, body);
+  updatePostsJson(title, username, date, categories, filename);
   updateAuthorsJson(username, authorName, authorEmail, authorBio, authorImage, authorLink);
   Logger.log("Done running form logic");
 
@@ -128,3 +129,57 @@ function updateAuthorsJson(username, authorName, authorEmail, authorBio, authorI
 
 }
 
+
+
+function updatePostsJson(title, username, date, categories, filename) {
+  const repo = 'phanuelle973/looplogs';
+  const path = 'posts.json';
+  const token = ''; // your GitHub token
+
+  const headers = {
+    Authorization: `token ${token}`,
+    Accept: 'application/vnd.github.v3+json'
+  };
+
+  // Step 1: Try to fetch current posts.json
+  let posts = [];
+  let sha = null;
+
+  try {
+    const getResponse = UrlFetchApp.fetch(`https://api.github.com/repos/${repo}/contents/${path}`, { headers });
+    const contentJson = JSON.parse(getResponse.getContentText());
+    const content = Utilities.newBlob(Utilities.base64Decode(contentJson.content)).getDataAsString();
+    posts = JSON.parse(content);
+    sha = contentJson.sha;
+  } catch (e) {
+    Logger.log("posts.json not found, creating new one");
+  }
+
+  // Step 2: Add new post metadata
+  posts.push({
+    title: title,
+    author: username,
+    date: date,
+    categories: categories.split(',').map(tag => tag.trim()),
+    filename: `posts/${filename}`
+  });
+
+  const updatedContent = JSON.stringify(posts, null, 2);
+  const payload = {
+    message: `Add new post to posts.json: ${filename}`,
+    content: Utilities.base64Encode(updatedContent),
+    sha: sha
+  };
+
+  const options = {
+    method: 'PUT',
+    headers,
+    contentType: 'application/json',
+    payload: JSON.stringify(payload)
+  };
+
+  const url = `https://api.github.com/repos/${repo}/contents/${path}`;
+  const response = UrlFetchApp.fetch(url, options);
+  Logger.log("Updated posts.json:");
+  Logger.log(response.getContentText());
+}
