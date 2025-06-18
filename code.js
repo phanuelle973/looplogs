@@ -4,7 +4,7 @@ const FIREBASE_API_KEY = "AIzaSyBDt3Ybm9mjDn5u85MFhVqB0UYDBiQvrJg";
 
 function onFormSubmit(e) {
   const row = e.values;
-  const [timestamp, authorName, username, authorEmail, authorBio, title, content, categories, imageBool, authorImage, authorLink] = row;
+  const [timestamp, authorEmail, authorName, username, authorBio, title, content, categories, imageBool, authorImage, authorLink] = row;
 
   const today = new Date();
   const dateStr = today.toISOString().split('T')[0];
