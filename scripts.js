@@ -47,7 +47,6 @@ window.db = db; // so it’s usable globally if needed
 //   },
 // ];
 
-
 // DOM elements
 const postList = document.getElementById("post-list");
 const tagSearch = document.getElementById("tag-search");
@@ -60,8 +59,7 @@ async function fetchPostsJson() {
   renderPostList(getFilteredAndSortedPosts());
 }
 
-window.posts = await fetchPostsJson();
-
+// window.posts = await fetchPostsJson();
 
 // Render the post list
 function renderPostList(postArray) {
@@ -211,7 +209,9 @@ async function main() {
   if (!postList) return;
 
   // Fetch like counts and update window.posts
-  window.posts = await fetchLikeCounts(posts);
+  let posts = await fetchPostsJson(); // Load from posts.json
+  posts = await fetchLikeCounts(posts); // Attach like counts from Firebase RTDB
+  window.posts = posts; // Store for access elsewhere
 
   // Initial render
   renderPostList(getFilteredAndSortedPosts());
