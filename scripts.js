@@ -48,6 +48,11 @@ const posts = [
 ];
 
 
+// DOM elements
+const postList = document.getElementById("post-list");
+const tagSearch = document.getElementById("tag-search");
+const sortDropdown = document.getElementById("sort-select");
+
 async function fetchPostsJson() {
   const res = await fetch("posts.json");
   const data = await res.json();
@@ -57,11 +62,6 @@ async function fetchPostsJson() {
 
 window.posts = await fetchPostsJson();
 
-
-// DOM elements
-const postList = document.getElementById("post-list");
-const tagSearch = document.getElementById("tag-search");
-const sortDropdown = document.getElementById("sort-select");
 
 // Render the post list
 function renderPostList(postArray) {
