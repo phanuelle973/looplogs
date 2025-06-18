@@ -1,6 +1,6 @@
 // ⚠️ Replace these values with your own Firebase project details
-const FIREBASE_URL = "https://firestore.googleapis.com/v1/projects/looplogs-4a711/databases/(default)/documents/posts";
-const FIREBASE_API_KEY = "AIzaSyBDt3Ybm9mjDn5u85MFhVqB0UYDBiQvrJg";
+// const FIREBASE_URL = "https://firestore.googleapis.com/v1/projects/looplogs-4a711/databases/(default)/documents/posts";
+// const FIREBASE_API_KEY = "AIzaSyBDt3Ybm9mjDn5u85MFhVqB0UYDBiQvrJg";
 
 function onFormSubmit(e) {
   const row = e.values;
