@@ -15,6 +15,9 @@
 //   },
 // ];
 
+let renderedCount = 0;
+const PAGE_SIZE = 6;
+
 // DOM elements
 const postList = document.getElementById("post-list");
 const tagSearch = document.getElementById("tag-search");
@@ -23,8 +26,7 @@ const sortDropdown = document.getElementById("sort-select");
 async function fetchPostsJson() {
   const res = await fetch("posts.json");
   const data = await res.json();
-  window.posts =  data; // include like counts
-  renderPostList(getFilteredAndSortedPosts());
+  return data;
 }
 
 // window.posts = await fetchPostsJson();
@@ -49,8 +51,8 @@ function renderPostList(postArray) {
 
     const meta = document.createElement("p");
     meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
-      post.author.toLowerCase()
-    )}" class="author-link">${post.author}</a> · ${post.date}`;
+      post.username.toLowerCase()
+    )}" class="author-link">${post.username}</a> · ${post.date}`;
 
     const tags = document.createElement("p");
     tags.textContent = post.categories.join(", ");
@@ -102,60 +104,59 @@ function getFilteredAndSortedPosts() {
 
 // ❤️ Like button logic
 async function createLikeButton(postId) {
-//   const safeId = btoa(postId); // base64-encode
-//   const likeRef = doc(db, "likes", safeId);
+  //   const safeId = btoa(postId); // base64-encode
+  //   const likeRef = doc(db, "likes", safeId);
 
-//   let count = 0;
-//   try {
-//     const docSnap = await getDoc(likeRef);
-//     if (docSnap.exists()) {
-//       count = docSnap.data().count || 0;
-//     } else {
-//       await setDoc(likeRef, { count: 0 });
-//     }
-//   } catch (e) {
-//     console.error("Error fetching like count:", e);
-//   }
+  //   let count = 0;
+  //   try {
+  //     const docSnap = await getDoc(likeRef);
+  //     if (docSnap.exists()) {
+  //       count = docSnap.data().count || 0;
+  //     } else {
+  //       await setDoc(likeRef, { count: 0 });
+  //     }
+  //   } catch (e) {
+  //     console.error("Error fetching like count:", e);
+  //   }
 
-//   const btn = document.createElement("button");
-//   btn.className = "like-button";
+  //   const btn = document.createElement("button");
+  //   btn.className = "like-button";
 
-//   const hasLiked = localStorage.getItem(`liked_${safeId}`) === "true";
-//   btn.textContent = hasLiked ? `💔 Unlike (${count})` : `❤️ Like (${count})`;
+  //   const hasLiked = localStorage.getItem(`liked_${safeId}`) === "true";
+  //   btn.textContent = hasLiked ? `💔 Unlike (${count})` : `❤️ Like (${count})`;
 
-//   btn.onclick = async () => {
-//     const alreadyLiked = localStorage.getItem(`liked_${safeId}`) === "true";
+  //   btn.onclick = async () => {
+  //     const alreadyLiked = localStorage.getItem(`liked_${safeId}`) === "true";
 
-//     try {
-//       if (alreadyLiked) {
-//         await updateDoc(likeRef, { count: increment(-1) });
-//         localStorage.removeItem(`liked_${safeId}`);
-//       } else {
-//         await updateDoc(likeRef, { count: increment(1) });
-//         localStorage.setItem(`liked_${safeId}`, "true");
-//       }
+  //     try {
+  //       if (alreadyLiked) {
+  //         await updateDoc(likeRef, { count: increment(-1) });
+  //         localStorage.removeItem(`liked_${safeId}`);
+  //       } else {
+  //         await updateDoc(likeRef, { count: increment(1) });
+  //         localStorage.setItem(`liked_${safeId}`, "true");
+  //       }
 
-//       const newSnap = await getDoc(likeRef);
-//       const newCount = newSnap.data().count;
+  //       const newSnap = await getDoc(likeRef);
+  //       const newCount = newSnap.data().count;
 
-//       btn.textContent = alreadyLiked
-//         ? `❤️ Like (${newCount})`
-//         : `💔 Unlike (${newCount})`;
-//     } catch (e) {
-//       console.error("Error updating like:", e);
-    // }
-//   };
+  //       btn.textContent = alreadyLiked
+  //         ? `❤️ Like (${newCount})`
+  //         : `💔 Unlike (${newCount})`;
+  //     } catch (e) {
+  //       console.error("Error updating like:", e);
+  // }
+  //   };
   const btn = document.createElement("button");
   btn.className = "like-button";
   btn.textContent = "❤️ Like";
-
 
   return btn;
 }
 
 // Fetch like counts for all posts and update window.posts
 async function fetchLikeCounts(posts) {
-  return posts.map(post => ({ ...post, likeCount: 0 }));
+  return posts.map((post) => ({ ...post, likeCount: 0 }));
 }
 
 // Main logic: fetch like counts, then render and set up event listeners
@@ -169,7 +170,10 @@ async function main() {
   window.posts = posts; // Store for access elsewhere
 
   // Initial render
-  renderPostList(getFilteredAndSortedPosts());
+  renderedCount = 0;
+  postList.innerHTML = "";
+  window.filteredPosts = getFilteredAndSortedPosts();
+  renderNextPage();
 
   // Re-render on sort or search
   if (sortDropdown) {
@@ -182,6 +186,52 @@ async function main() {
       renderPostList(getFilteredAndSortedPosts());
     });
   }
+
+  window.addEventListener("scroll", () => {
+    if (
+      window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
+      renderedCount < window.filteredPosts.length
+    ) {
+      renderNextPage();
+    }
+  });
+}
+
+function renderNextPage() {
+  const nextPosts = window.filteredPosts.slice(
+    renderedCount,
+    renderedCount + PAGE_SIZE
+  );
+  nextPosts.forEach((post) => {
+    const el = document.createElement("div");
+    el.className = "post-preview";
+
+    const title = document.createElement("h2");
+    const link = document.createElement("a");
+    link.href = post.link;
+    link.textContent = post.title;
+    title.appendChild(link);
+
+    const meta = document.createElement("p");
+    meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
+      post.username.toLowerCase()
+    )}" class="author-link">${post.username}</a> · ${post.date}`;
+
+    const tags = document.createElement("p");
+    tags.textContent = post.categories.join(", ");
+
+    el.appendChild(title);
+    el.appendChild(meta);
+    el.appendChild(tags);
+
+    createLikeButton(post.link).then((likeBtn) => {
+      el.appendChild(likeBtn);
+    });
+
+    postList.appendChild(el);
+  });
+
+  renderedCount += PAGE_SIZE;
 }
 
 function displayPosts(posts) {
@@ -202,7 +252,6 @@ function displayPosts(posts) {
   });
 }
 
-
 async function loadAuthorData(username) {
   const res = await fetch("authors.json");
   const authors = await res.json();
@@ -216,7 +265,7 @@ function getAuthorFromUrl() {
 
 function filterPostsByAuthor(username) {
   return window.posts.filter(
-    (post) => post.author.toLowerCase().replace(/\s/g, "") === username
+    (post) => post.username.toLowerCase().replace(/\s/g, "") === username
   );
 }
 
@@ -255,7 +304,7 @@ async function renderAuthorPage() {
 
   // Filter and render posts by this author
   const filteredPosts = window.posts.filter(
-    (post) => post.author.toLowerCase().replace(/\s/g, "") === username
+    (post) => post.username.toLowerCase().replace(/\s/g, "") === username
   );
   renderPostList(filteredPosts);
 }

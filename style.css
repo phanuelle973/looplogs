@@ -170,6 +170,14 @@ button.gwc-btn:hover {
 }
 
 
+/* LINKS */
+a:link {
+  color: var(--accent-dark); 
+}
+
+a:visited {
+  color: var(--light); 
+}
 
 
 
