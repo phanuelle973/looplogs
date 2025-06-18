@@ -102,7 +102,6 @@ function getFilteredAndSortedPosts() {
 
 // ❤️ Like button logic
 async function createLikeButton(postId) {
-  const db = getFirestore(app);
   const safeId = btoa(postId); // base64-encode
   const likeRef = doc(db, "likes", safeId);
 
@@ -152,7 +151,6 @@ async function createLikeButton(postId) {
 
 // Fetch like counts for all posts and update window.posts
 async function fetchLikeCounts(posts) {
-  const db = getFirestore(app);
   const updatedPosts = await Promise.all(
     posts.map(async (post) => {
       const safeId = btoa(post.link);
