@@ -263,7 +263,6 @@ function displayPosts(posts) {
   });
 }
 
-document.addEventListener("DOMContentLoaded", loadPostsFromFirestore);
 
 async function loadAuthorData(username) {
   const res = await fetch("authors.json");
