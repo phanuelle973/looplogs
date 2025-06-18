@@ -197,22 +197,6 @@ async function main() {
   }
 }
 
-// let firebasePosts = [];
-
-// async function loadPostsFromFirestore() {
-//   const postList = document.getElementById("post-list");
-//   if (!postList) return;
-
-//   const snapshot = await db.collection("posts").get();
-//   firebasePosts = snapshot.docs.map((doc) => ({
-//     id: doc.id,
-//     ...doc.data(),
-//     timestamp: doc.data().timestamp?.toDate?.() || new Date(), // fallback
-//   }));
-
-//   displayPosts(firebasePosts); // show initially
-// }
-
 function displayPosts(posts) {
   const postList = document.getElementById("post-list");
   postList.innerHTML = "";
