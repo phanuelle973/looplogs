@@ -43,5 +43,14 @@
     "bio": "swertyu",
     "image": "No",
     "link": ""
+  },
+  "luxuryqueen": {
+    "id": "luxuryqueen",
+    "username": "luxuryqueen",
+    "name": "Juju Gucci",
+    "email": "phanmanuel9@gmail.com",
+    "bio": "I'm the realest",
+    "image": "https://via.placeholder.com/150",
+    "link": ""
   }
 }
