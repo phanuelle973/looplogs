@@ -1,365 +1,82 @@
-// const posts = [
-//   {
-//     title: "Welcome to LoopLogs",
-//     author: "Phanuelle",
-//     date: "2025-06-15",
-//     link: "post.html?file=posts/welcome.md",
-//     tags: ["Reflections"],
-//   },
-//   {
-//     title: "My First Hackathon",
-//     author: "Jamie R.",
-//     date: "2025-06-16",
-//     link: "post.html?file=posts/hackathon.md",
-//     tags: ["Projects", "Coding Journey"],
-//   },
-// ];
 
-let renderedCount = 0;
-const PAGE_SIZE = 6;
+document.addEventListener("DOMContentLoaded", async () => {
+  const container = document.getElementById("post-container");
+  let allPosts = await fetchPostsJson();
+  const urlParams = new URLSearchParams(window.location.search);
+  const authorParam = urlParams.get("author");
 
-// DOM elements
-const postList = document.getElementById("post-list");
-const tagSearch = document.getElementById("tag-search");
-const sortDropdown = document.getElementById("sort-select");
-
-async function fetchPostsJson() {
-  const res = await fetch("posts.json");
-  const data = await res.json();
-  return data;
-}
-
-// window.posts = await fetchPostsJson();
-
-// Render the post list
-function renderPostList(postArray) {
-  if (!postList) return;
-  postList.innerHTML = "";
-  if (postArray.length === 0) {
-    postList.innerHTML = "<p>No posts found.</p>";
-    return;
-  }
-  postArray.forEach((post) => {
-    const el = document.createElement("div");
-    el.className = "post-preview";
-
-    const title = document.createElement("h2");
-    const link = document.createElement("a");
-    link.href = post.link;
-    link.textContent = post.title;
-    title.appendChild(link);
-
-    const meta = document.createElement("p");
-    const username = post.username || post.author || "Unknown";
-    const dateStr = post.date instanceof Date 
-      ? post.date.toLocaleDateString() 
-      : (post.timestamp ? new Date(post.timestamp).toLocaleDateString() : "Unknown date");
-    meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
-      username.toLowerCase().replace(/\s/g, "")
-    )}" class="author-link">${username}</a> · ${dateStr}`;
-
-    const tags = document.createElement("p");
-    tags.textContent = post.categories.join(", ");
-
-    el.appendChild(title);
-    el.appendChild(meta);
-    el.appendChild(tags);
-
-    // Add the like button asynchronously
-    createLikeButton(post.link).then((likeBtn) => {
-      el.appendChild(likeBtn);
-    });
-
-    postList.appendChild(el);
-  });
-}
-
-// Get filtered and sorted posts
-function getFilteredAndSortedPosts() {
-  const tagQuery = tagSearch?.value.toLowerCase() || "";
-  const sortBy = sortDropdown?.value || "date";
-
-  let result = [...window.posts];
-
-  // FILTER by tag
-  if (tagQuery) {
-    result = result.filter((post) =>
-      post.categories.some((tag) => tag.toLowerCase().includes(tagQuery))
+  // Filter posts by author if param exists
+  if (authorParam) {
+    allPosts = allPosts.filter(
+      (post) => post.author.toLowerCase() === authorParam.toLowerCase()
     );
+
+    const authorHeader = document.getElementById("author-name");
+    if (authorHeader) {
+      authorHeader.textContent = `Posts by ${authorParam}`;
+    }
   }
 
-  // SORT
-  if (sortBy === "date") {
-    // Newest first
-    result.sort((a, b) => {
-      const dateA = a.date instanceof Date ? a.date : new Date(a.timestamp || a.date);
-      const dateB = b.date instanceof Date ? b.date : new Date(b.timestamp || b.date);
-      return dateB - dateA;
-    });
-  } else if (sortBy === "likes") {
-    // Most liked first (assumes post.likeCount exists; otherwise, all will be 0)
-    result.sort((a, b) => (b.likeCount || 0) - (a.likeCount || 0));
-  } else if (sortBy === "author") {
-    // Author name A-Z
-    result.sort((a, b) => {
-      const authorA = a.username || a.author || "";
-      const authorB = b.username || b.author || "";
-      return authorA.localeCompare(authorB);
-    });
-  } else if (sortBy === "title") {
-    // Title A-Z
-    result.sort((a, b) => a.title.localeCompare(b.title));
-  }
-
-  return result;
-}
-
-// ❤️ Like button logic
-async function createLikeButton(postId) {
-  //   const safeId = btoa(postId); // base64-encode
-  //   const likeRef = doc(db, "likes", safeId);
-
-  //   let count = 0;
-  //   try {
-  //     const docSnap = await getDoc(likeRef);
-  //     if (docSnap.exists()) {
-  //       count = docSnap.data().count || 0;
-  //     } else {
-  //       await setDoc(likeRef, { count: 0 });
-  //     }
-  //   } catch (e) {
-  //     console.error("Error fetching like count:", e);
-  //   }
-
-  //   const btn = document.createElement("button");
-  //   btn.className = "like-button";
-
-  //   const hasLiked = localStorage.getItem(`liked_${safeId}`) === "true";
-  //   btn.textContent = hasLiked ? `💔 Unlike (${count})` : `❤️ Like (${count})`;
-
-  //   btn.onclick = async () => {
-  //     const alreadyLiked = localStorage.getItem(`liked_${safeId}`) === "true";
-
-  //     try {
-  //       if (alreadyLiked) {
-  //         await updateDoc(likeRef, { count: increment(-1) });
-  //         localStorage.removeItem(`liked_${safeId}`);
-  //       } else {
-  //         await updateDoc(likeRef, { count: increment(1) });
-  //         localStorage.setItem(`liked_${safeId}`, "true");
-  //       }
-
-  //       const newSnap = await getDoc(likeRef);
-  //       const newCount = newSnap.data().count;
-
-  //       btn.textContent = alreadyLiked
-  //         ? `❤️ Like (${newCount})`
-  //         : `💔 Unlike (${newCount})`;
-  //     } catch (e) {
-  //       console.error("Error updating like:", e);
-  // }
-  //   };
-  const btn = document.createElement("button");
-  btn.className = "like-button";
-  btn.textContent = "❤️ Like";
-
-  return btn;
-}
-
-// Fetch like counts for all posts and update window.posts
-async function fetchLikeCounts(posts) {
-  return posts.map((post) => ({ ...post, likeCount: 0 }));
-}
-
-// Main logic: fetch like counts, then render and set up event listeners
-async function main() {
-  // Only run on pages with a post list (posts.html, author.html, etc.)
-  if (!postList) return;
-
-  // Fetch like counts and update window.posts
-  let posts = await fetchPostsJson(); // Load from posts.json
-  
-  // Transform posts.json structure to match expected format
-  posts = posts.map(post => ({
-    ...post,
-    link: `post.html?file=${post.filename}`,
-    username: post.author,
-    date: new Date(post.timestamp)
-  }));
-  
-  posts = await fetchLikeCounts(posts); // Attach like counts from Firebase RTDB
-  window.posts = posts; // Store for access elsewhere
-
-  // Initial render
-  renderedCount = 0;
-  postList.innerHTML = "";
-  window.filteredPosts = getFilteredAndSortedPosts();
-  renderNextPage();
-
-  // Re-render on sort or search
-  if (sortDropdown) {
-    sortDropdown.addEventListener("change", () => {
-      renderPostList(getFilteredAndSortedPosts());
+  // Sorting functionality
+  const sortSelect = document.getElementById("sort-select");
+  if (sortSelect) {
+    sortSelect.addEventListener("change", (e) => {
+      const sortBy = e.target.value;
+      if (sortBy === "newest") {
+        allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+      } else if (sortBy === "oldest") {
+        allPosts.sort((a, b) => new Date(a.date) - new Date(b.date));
+      }
+      visibleCount = 6;
+      renderPosts(allPosts.slice(0, visibleCount), container);
     });
   }
-  if (tagSearch) {
-    tagSearch.addEventListener("input", () => {
-      renderPostList(getFilteredAndSortedPosts());
-    });
-  }
+
+  // Infinite scroll setup
+  let visibleCount = 6;
+  const incrementCount = 3;
+  renderPosts(allPosts.slice(0, visibleCount), container);
 
   window.addEventListener("scroll", () => {
     if (
-      window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
-      renderedCount < window.filteredPosts.length
+      window.innerHeight + window.scrollY >=
+      document.body.offsetHeight - 100
     ) {
-      renderNextPage();
+      visibleCount += incrementCount;
+      renderPosts(allPosts.slice(0, visibleCount), container);
     }
   });
-}
+});
 
-function renderNextPage() {
-  const nextPosts = window.filteredPosts.slice(
-    renderedCount,
-    renderedCount + PAGE_SIZE
-  );
-  nextPosts.forEach((post) => {
-    const el = document.createElement("div");
-    el.className = "post-preview";
+// Render posts with fixed date formatting
+function renderPosts(posts, container) {
+  container.innerHTML = "";
+  posts.forEach((post) => {
+    const postElem = document.createElement("div");
+    postElem.classList.add("post");
 
-    const title = document.createElement("h2");
-    const link = document.createElement("a");
-    link.href = post.link;
-    link.textContent = post.title;
-    title.appendChild(link);
-
-    const meta = document.createElement("p");
-    const username = post.username || post.author || "Unknown";
-    const dateStr = post.date instanceof Date 
-      ? post.date.toLocaleDateString() 
-      : (post.timestamp ? new Date(post.timestamp).toLocaleDateString() : "Unknown date");
-    meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
-      username.toLowerCase().replace(/\s/g, "")
-    )}" class="author-link">${username}</a> · ${dateStr}`;
-
-    const tags = document.createElement("p");
-    tags.textContent = post.categories.join(", ");
-
-    el.appendChild(title);
-    el.appendChild(meta);
-    el.appendChild(tags);
-
-    createLikeButton(post.link).then((likeBtn) => {
-      el.appendChild(likeBtn);
+    const postDate = new Date(post.date);
+    const readableDate = postDate.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
 
-    postList.appendChild(el);
-  });
-
-  renderedCount += PAGE_SIZE;
-}
-
-function displayPosts(posts) {
-  const postList = document.getElementById("post-list");
-  postList.innerHTML = "";
-
-  posts.forEach((data) => {
-    const post = document.createElement("div");
-    post.className = "post-card";
-    post.innerHTML = `
-      <h2>${data.title}</h2>
-      <p>${data.content}</p>
-      <p><strong>Author:</strong> ${data.author}</p>
-      <p><strong>Tags:</strong> ${data.tags}</p>
-      <p><small>${new Date(data.timestamp).toLocaleString()}</small></p>
+    postElem.innerHTML = `
+      <h3><a href="post.html?id=${post.id}">${post.title}</a></h3>
+      <p class="post-meta">By <a href="posts.html?author=${post.author}">${post.author}</a> | ${readableDate}</p>
+      <p>${post.summary}</p>
     `;
-    postList.appendChild(post);
+    container.appendChild(postElem);
   });
 }
 
-async function loadAuthorData(username) {
-  const res = await fetch("authors.json");
-  const authors = await res.json();
-  // Try exact match first
-  if (authors[username]) return authors[username];
-  // Try case-insensitive match
-  const normalizedUsername = username.toLowerCase().replace(/\s/g, "");
-  const authorKey = Object.keys(authors).find(key => 
-    key.toLowerCase().replace(/\s/g, "") === normalizedUsername
-  );
-  return authorKey ? authors[authorKey] : null;
-}
-
-function getAuthorFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("id");
-}
-
-function filterPostsByAuthor(username) {
-  return window.posts.filter(
-    (post) => {
-      const postUsername = (post.username || post.author || "").toLowerCase().replace(/\s/g, "");
-      return postUsername === username;
-    }
-  );
-}
-
-async function renderAuthorPage() {
-  const username = getAuthorFromUrl();
-  if (!username) return;
-
-  // Load author data - try multiple username formats
-  let author = await loadAuthorData(username);
-  if (!author) {
-    // Try with spaces
-    author = await loadAuthorData(username.replace(/\s/g, " "));
+async function fetchPostsJson() {
+  try {
+    const response = await fetch("posts.json");
+    return await response.json();
+  } catch (error) {
+    console.error("Failed to fetch posts.json:", error);
+    return [];
   }
-  if (!author) {
-    // Try original case
-    const allAuthors = await fetch("authors.json").then(r => r.json());
-    const authorKey = Object.keys(allAuthors).find(key => 
-      key.toLowerCase().replace(/\s/g, "") === username
-    );
-    if (authorKey) author = allAuthors[authorKey];
-  }
-
-  // Update author header
-  const authorHeader = document.getElementById("author-header");
-  if (authorHeader) {
-    authorHeader.textContent = `Posts by ${
-      author.name || author.id || username
-    }`;
-  }
-
-  // Show author profile
-  const profileBox = document.getElementById("author-profile-page");
-  if (profileBox) {
-    profileBox.innerHTML = `
-      <img src="${author.image}" alt="${
-      author.name || author.username
-    }" style="max-width:120px;border-radius:50%;">
-      <h2>@${author.username}</h2>
-      <p>${author.bio || ""}</p>
-      ${
-        author.link
-          ? `<a href="${author.link}" target="_blank">Profile</a>`
-          : ""
-      }
-    `;
-  }
-
-  // Filter and render posts by this author
-  const filteredPosts = window.posts.filter(
-    (post) => {
-      const postUsername = (post.username || post.author || "").toLowerCase().replace(/\s/g, "");
-      return postUsername === username;
-    }
-  );
-  renderPostList(filteredPosts);
-}
-
-if (window.location.pathname.includes("author.html")) {
-  main().then(renderAuthorPage);
-} else {
-  main();
 }

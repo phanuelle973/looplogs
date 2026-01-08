@@ -217,3 +217,18 @@ a:visited {
     padding: 1rem 0;
   }
 }
+
+
+/* Keep top navbar buttons white always */
+header a {
+  color: white !important;
+}
+
+/* Post link behavior (normal and visited) */
+.post a {
+  color: #ccc; /* default */
+  text-decoration: none;
+}
+.post a:visited {
+  color: #888;
+}
