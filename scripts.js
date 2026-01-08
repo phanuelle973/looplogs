@@ -50,9 +50,13 @@ function renderPostList(postArray) {
     title.appendChild(link);
 
     const meta = document.createElement("p");
+    const username = post.username || post.author || "Unknown";
+    const dateStr = post.date instanceof Date 
+      ? post.date.toLocaleDateString() 
+      : (post.timestamp ? new Date(post.timestamp).toLocaleDateString() : "Unknown date");
     meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
-      post.username.toLowerCase()
-    )}" class="author-link">${post.username}</a> · ${post.date}`;
+      username.toLowerCase().replace(/\s/g, "")
+    )}" class="author-link">${username}</a> · ${dateStr}`;
 
     const tags = document.createElement("p");
     tags.textContent = post.categories.join(", ");
@@ -87,13 +91,21 @@ function getFilteredAndSortedPosts() {
   // SORT
   if (sortBy === "date") {
     // Newest first
-    result.sort((a, b) => new Date(b.date) - new Date(a.date));
+    result.sort((a, b) => {
+      const dateA = a.date instanceof Date ? a.date : new Date(a.timestamp || a.date);
+      const dateB = b.date instanceof Date ? b.date : new Date(b.timestamp || b.date);
+      return dateB - dateA;
+    });
   } else if (sortBy === "likes") {
     // Most liked first (assumes post.likeCount exists; otherwise, all will be 0)
     result.sort((a, b) => (b.likeCount || 0) - (a.likeCount || 0));
   } else if (sortBy === "author") {
     // Author name A-Z
-    result.sort((a, b) => a.author.localeCompare(b.author));
+    result.sort((a, b) => {
+      const authorA = a.username || a.author || "";
+      const authorB = b.username || b.author || "";
+      return authorA.localeCompare(authorB);
+    });
   } else if (sortBy === "title") {
     // Title A-Z
     result.sort((a, b) => a.title.localeCompare(b.title));
@@ -166,6 +178,15 @@ async function main() {
 
   // Fetch like counts and update window.posts
   let posts = await fetchPostsJson(); // Load from posts.json
+  
+  // Transform posts.json structure to match expected format
+  posts = posts.map(post => ({
+    ...post,
+    link: `post.html?file=${post.filename}`,
+    username: post.author,
+    date: new Date(post.timestamp)
+  }));
+  
   posts = await fetchLikeCounts(posts); // Attach like counts from Firebase RTDB
   window.posts = posts; // Store for access elsewhere
 
@@ -213,9 +234,13 @@ function renderNextPage() {
     title.appendChild(link);
 
     const meta = document.createElement("p");
+    const username = post.username || post.author || "Unknown";
+    const dateStr = post.date instanceof Date 
+      ? post.date.toLocaleDateString() 
+      : (post.timestamp ? new Date(post.timestamp).toLocaleDateString() : "Unknown date");
     meta.innerHTML = `By <a href="author.html?id=${encodeURIComponent(
-      post.username.toLowerCase()
-    )}" class="author-link">${post.username}</a> · ${post.date}`;
+      username.toLowerCase().replace(/\s/g, "")
+    )}" class="author-link">${username}</a> · ${dateStr}`;
 
     const tags = document.createElement("p");
     tags.textContent = post.categories.join(", ");
@@ -255,7 +280,14 @@ function displayPosts(posts) {
 async function loadAuthorData(username) {
   const res = await fetch("authors.json");
   const authors = await res.json();
-  return authors[username];
+  // Try exact match first
+  if (authors[username]) return authors[username];
+  // Try case-insensitive match
+  const normalizedUsername = username.toLowerCase().replace(/\s/g, "");
+  const authorKey = Object.keys(authors).find(key => 
+    key.toLowerCase().replace(/\s/g, "") === normalizedUsername
+  );
+  return authorKey ? authors[authorKey] : null;
 }
 
 function getAuthorFromUrl() {
@@ -265,7 +297,10 @@ function getAuthorFromUrl() {
 
 function filterPostsByAuthor(username) {
   return window.posts.filter(
-    (post) => post.username.toLowerCase().replace(/\s/g, "") === username
+    (post) => {
+      const postUsername = (post.username || post.author || "").toLowerCase().replace(/\s/g, "");
+      return postUsername === username;
+    }
   );
 }
 
@@ -273,9 +308,20 @@ async function renderAuthorPage() {
   const username = getAuthorFromUrl();
   if (!username) return;
 
-  // Load author data
-  const author = await loadAuthorData(username);
-  if (!author) return;
+  // Load author data - try multiple username formats
+  let author = await loadAuthorData(username);
+  if (!author) {
+    // Try with spaces
+    author = await loadAuthorData(username.replace(/\s/g, " "));
+  }
+  if (!author) {
+    // Try original case
+    const allAuthors = await fetch("authors.json").then(r => r.json());
+    const authorKey = Object.keys(allAuthors).find(key => 
+      key.toLowerCase().replace(/\s/g, "") === username
+    );
+    if (authorKey) author = allAuthors[authorKey];
+  }
 
   // Update author header
   const authorHeader = document.getElementById("author-header");
@@ -304,7 +350,10 @@ async function renderAuthorPage() {
 
   // Filter and render posts by this author
   const filteredPosts = window.posts.filter(
-    (post) => post.username.toLowerCase().replace(/\s/g, "") === username
+    (post) => {
+      const postUsername = (post.username || post.author || "").toLowerCase().replace(/\s/g, "");
+      return postUsername === username;
+    }
   );
   renderPostList(filteredPosts);
 }

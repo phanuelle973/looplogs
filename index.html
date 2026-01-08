@@ -20,14 +20,47 @@
     </header>
     <main>
         <h2>Latest Post</h2>
-        <article>
-            <h3><a href="post.html?file=posts/welcome.md">Welcome to LoopLogs</a></h3>
-            <p>By: Phanuelle · Category: Reflections</p>
-            <p>Get started sharing your journey as a coder, creator, and community member!</p>
+        <article id="latest-post">
+            <p>Loading latest post...</p>
         </article>
     </main>
 
     <script src="scripts.js" type="module"></script>
+    <script type="module">
+        async function loadLatestPost() {
+            try {
+                const res = await fetch("posts.json");
+                const posts = await res.json();
+                
+                if (posts.length === 0) {
+                    document.getElementById("latest-post").innerHTML = "<p>No posts yet. Be the first to submit one!</p>";
+                    return;
+                }
+                
+                // Sort by timestamp to get the latest
+                const sortedPosts = [...posts].sort((a, b) => {
+                    return new Date(b.timestamp) - new Date(a.timestamp);
+                });
+                
+                const latest = sortedPosts[0];
+                const username = latest.author || "Unknown";
+                const dateStr = new Date(latest.timestamp).toLocaleDateString();
+                const categories = latest.categories ? latest.categories.join(", ") : "Uncategorized";
+                const preview = latest.content ? latest.content.substring(0, 150) + (latest.content.length > 150 ? "..." : "") : "No preview available";
+                
+                document.getElementById("latest-post").innerHTML = `
+                    <h3><a href="post.html?file=${latest.filename}">${latest.title}</a></h3>
+                    <p>By: ${username} · ${dateStr} · ${categories}</p>
+                    <p>${preview}</p>
+                `;
+            } catch (error) {
+                console.error("Error loading latest post:", error);
+                document.getElementById("latest-post").innerHTML = "<p>Failed to load latest post. Please try again later.</p>";
+            }
+        }
+        
+        loadLatestPost();
+    </script>
 </body>
 
 </html>
